@@ -72,7 +72,7 @@ export function useTheme() {
     }
 
     const { colors, platform, isDark, themeMode, setThemeMode, toggleTheme, designSystem } = ctx;
-    const gray = colors.gray as Record<number, string>;
+    const gray = colors.gray as unknown as Record<number, string>;
 
     return useMemo(() => ({
         // -----------------------------------------------------------------------

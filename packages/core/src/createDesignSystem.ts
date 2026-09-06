@@ -102,7 +102,7 @@ export const createDesignSystem = (
 
     // Generar success si no se provee
     const successColor = normalizedPalette.success || generateSuccessColor(normalizedPalette.secondary);
-    const fullPalette = { ...normalizedPalette, success: successColor };
+    const fullPalette: Record<string, string> = { ...normalizedPalette, success: successColor };
 
     // Escala de grises
     const gray = generateGrayScale(normalizedPalette.background);
