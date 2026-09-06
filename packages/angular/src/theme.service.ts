@@ -1,12 +1,20 @@
 /**
- * @fileoverview Servicio de tema para Angular con Signals
+ * @fileoverview Servicio de tema para Angular 20+
  * @module @ds-yoandry/angular/theme.service
  *
  * @author Yoandry
  * @version 4.2.0
  */
 
-import { Injectable, signal, computed, effect, Injector, inject, PLATFORM_ID } from '@angular/core';
+import {
+    Injectable,
+    signal,
+    computed,
+    effect,
+    inject,
+    PLATFORM_ID,
+    DestroyRef,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { createDesignSystem, DEFAULT_PALETTE } from '@ds-yoandry/core';
 import type { BrandPalette, DesignSystem, GrayScale } from '@ds-yoandry/core';
@@ -15,20 +23,17 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 
 /**
  * Colores aplanados del tema actual.
- * Misma API simplificada que el hook de React.
+ * API idéntica al hook `useTheme()` de React.
  */
 export interface ThemeColors {
-    // Fondos
     bg: string;
     surface: string;
     surfaceElevated: string;
     surfaceHover: string;
-    // Texto
     text: string;
     textSecondary: string;
     textMuted: string;
     textDisabled: string;
-    // Colores de marca
     primary: string;
     primaryLight: string;
     primaryDark: string;
@@ -40,29 +45,27 @@ export interface ThemeColors {
     successLight: string;
     warning: string;
     warningLight: string;
-    // Texto sobre colores
     onPrimary: string;
     onSecondary: string;
     onDanger: string;
     onSuccess: string;
     onWarning: string;
-    // Utilidades
     gray: GrayScale;
     border: string;
     divider: string;
 }
 
 /**
- * Servicio de tema para Angular 16+ con soporte completo de Signals.
+ * Servicio de tema para Angular 20+.
  *
- * Características:
- * - Detecta preferencia del sistema via matchMedia
- * - Persiste la selección en localStorage
- * - Aplica CSS custom properties al :root automáticamente
- * - API de colores aplanada idéntica al hook de React
+ * Usa la API moderna de Signals de Angular 20:
+ * - `signal()` para estado mutable
+ * - `computed()` para derivaciones reactivas
+ * - `effect()` para efectos secundarios (CSS vars, persistencia)
+ * - `input()` en directivas
  *
  * @example
- * // Proveer en AppModule o bootstrapApplication
+ * // Proveer en main.ts
  * import { provideDesignSystem } from '@ds-yoandry/angular';
  *
  * bootstrapApplication(AppComponent, {
@@ -74,30 +77,26 @@ export interface ThemeColors {
  * @Component({
  *     template: `
  *         <div [style.background]="theme.colors().bg">
- *             <p [style.color]="theme.colors().text">Hola mundo</p>
- *             <button
- *                 [style.background]="theme.colors().primary"
- *                 [style.color]="theme.colors().onPrimary"
- *                 (click)="theme.toggleTheme()"
- *             >
- *                 {{ theme.isDark() ? '☀️ Claro' : '🌙 Oscuro' }}
+ *             <p [style.color]="theme.colors().text">Hola</p>
+ *             <button (click)="theme.toggleTheme()">
+ *                 {{ theme.isDark() ? '☀️' : '🌙' }}
  *             </button>
  *         </div>
  *     `
  * })
  * export class AppComponent {
- *     theme = inject(ThemeService);
+ *     protected theme = injectTheme();
  * }
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
     private readonly platformId = inject(PLATFORM_ID);
-    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly storageKey = 'ds-yoandry-theme';
     private readonly designSystem: DesignSystem;
 
     // =========================================================================
-    // ESTADO (Signals)
+    // ESTADO
     // =========================================================================
 
     private readonly _themeMode = signal<ThemeMode>('system');
@@ -109,10 +108,10 @@ export class ThemeService {
         return mode === 'system' ? this._systemPrefersDark() : mode === 'dark';
     });
 
-    /** Modo de tema actual: 'light' | 'dark' | 'system' */
+    /** Modo actual: 'light' | 'dark' | 'system' */
     readonly themeMode = this._themeMode.asReadonly();
 
-    /** Colores aplanados del tema activo */
+    /** Colores aplanados del tema activo — reactivo a cambios */
     readonly colors = computed((): ThemeColors => {
         const ds = this.designSystem.colors;
         const dark = this.isDark();
@@ -171,7 +170,7 @@ export class ThemeService {
     // =========================================================================
 
     /**
-     * Cambia el modo de tema.
+     * Cambia el modo de tema y lo persiste en localStorage.
      *
      * @example
      * theme.setTheme('dark');
@@ -195,7 +194,7 @@ export class ThemeService {
     }
 
     /**
-     * Retorna el Design System completo para casos avanzados.
+     * Retorna el Design System completo para acceso avanzado.
      */
     getDesignSystem(): DesignSystem {
         return this.designSystem;
@@ -208,48 +207,56 @@ export class ThemeService {
     private initSystemDetection(): void {
         const media = window.matchMedia('(prefers-color-scheme: dark)');
         this._systemPrefersDark.set(media.matches);
-        media.addEventListener('change', (e) => {
+
+        const handler = (e: MediaQueryListEvent) => {
             this._systemPrefersDark.set(e.matches);
+        };
+        media.addEventListener('change', handler);
+
+        // Limpiar listener al destruir el servicio
+        this.destroyRef.onDestroy(() => {
+            media.removeEventListener('change', handler);
         });
     }
 
     private loadSavedTheme(): void {
         const saved = localStorage.getItem(this.storageKey) as ThemeMode | null;
-        if (saved && ['light', 'dark', 'system'].includes(saved)) {
+        if (saved && (['light', 'dark', 'system'] as ThemeMode[]).includes(saved)) {
             this._themeMode.set(saved);
         }
     }
 
     private initCSSEffect(): void {
-        // Aplica CSS custom properties al :root para usarlas en stylesheets
+        // En Angular 20, effect() en el constructor se vincula automáticamente
+        // al contexto de inyección — no necesita injector explícito
         effect(() => {
             const c = this.colors();
             const root = document.documentElement;
 
-            const properties: Record<string, string> = {
-                '--ds-bg': c.bg,
-                '--ds-surface': c.surface,
+            const vars: Record<string, string> = {
+                '--ds-bg':               c.bg,
+                '--ds-surface':          c.surface,
                 '--ds-surface-elevated': c.surfaceElevated,
-                '--ds-text': c.text,
-                '--ds-text-secondary': c.textSecondary,
-                '--ds-text-muted': c.textMuted,
-                '--ds-primary': c.primary,
-                '--ds-primary-light': c.primaryLight,
-                '--ds-secondary': c.secondary,
-                '--ds-danger': c.danger,
-                '--ds-success': c.success,
-                '--ds-warning': c.warning,
-                '--ds-border': c.border,
-                '--ds-divider': c.divider,
+                '--ds-text':             c.text,
+                '--ds-text-secondary':   c.textSecondary,
+                '--ds-text-muted':       c.textMuted,
+                '--ds-primary':          c.primary,
+                '--ds-primary-light':    c.primaryLight,
+                '--ds-primary-dark':     c.primaryDark,
+                '--ds-secondary':        c.secondary,
+                '--ds-danger':           c.danger,
+                '--ds-success':          c.success,
+                '--ds-warning':          c.warning,
+                '--ds-border':           c.border,
+                '--ds-divider':          c.divider,
             };
 
-            for (const [prop, value] of Object.entries(properties)) {
+            for (const [prop, value] of Object.entries(vars)) {
                 root.style.setProperty(prop, value);
             }
 
-            // Clase en el body para CSS convencional
             document.body.classList.toggle('ds-dark', this.isDark());
             document.body.classList.toggle('ds-light', !this.isDark());
-        }, { injector: this.injector });
+        });
     }
 }

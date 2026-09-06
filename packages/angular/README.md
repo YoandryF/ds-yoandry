@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/@ds-yoandry/angular?color=C1666B)](https://www.npmjs.com/package/@ds-yoandry/angular)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 
-> `ThemeService` con Signals + directiva + pipe para Angular 16+.
+> `ThemeService` con Signals + directiva + pipe para Angular 20+.
 > API de colores idéntica al hook de React.
 
 ---
@@ -16,7 +16,7 @@ npm install @ds-yoandry/angular
 pnpm add @ds-yoandry/angular
 ```
 
-**Requiere:** `@angular/core >= 16` y `@angular/common >= 16`.
+**Requiere:** `@angular/core >= 20` y `@angular/common >= 20`.
 
 ---
 

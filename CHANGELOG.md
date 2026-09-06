@@ -17,7 +17,7 @@ Esta versión transforma el sistema de diseño de un módulo local a una librer�
 
 - **`@ds-yoandry/core`** — Motor agnóstico de framework
 - **`@ds-yoandry/react`** — Hook + Provider para React / React Native
-- **`@ds-yoandry/angular`** — Service + Signals para Angular 16+
+- **`@ds-yoandry/angular`** — Service + Signals para Angular 20+
 
 ### Agregado
 

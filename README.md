@@ -38,7 +38,7 @@ const { primary, bg, shadow } = useTheme();
 |---------|-------------|-------------|
 | [`@ds-yoandry/core`](./packages/core/README.md) | Motor agnóstico de framework | `npm i @ds-yoandry/core` |
 | [`@ds-yoandry/react`](./packages/react/README.md) | Hook + Provider para React / React Native | `npm i @ds-yoandry/react` |
-| [`@ds-yoandry/angular`](./packages/angular/README.md) | Service + Signals para Angular 16+ | `npm i @ds-yoandry/angular` |
+| [`@ds-yoandry/angular`](./packages/angular/README.md) | Service + Signals para Angular 20+ | `npm i @ds-yoandry/angular` |
 
 ---
 
