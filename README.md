@@ -1,305 +1,232 @@
-# Design System Generator 🎨
+# ds-yoandry 🎨
 
-Sistema de diseño completo para React Native con soporte para modo claro/oscuro, accesibilidad WCAG AA, y estilos específicos por plataforma.
+> Design System completo y agnóstico de framework — genera colores, escalas, variantes y accesibilidad WCAG AA a partir de una paleta de 5-6 colores.
 
-## 🚀 Inicio Rápido
+[![npm core](https://img.shields.io/npm/v/@ds-yoandry/core?label=%40ds-yoandry%2Fcore&color=4357AD)](https://www.npmjs.com/package/@ds-yoandry/core)
+[![npm react](https://img.shields.io/npm/v/@ds-yoandry/react?label=%40ds-yoandry%2Freact&color=48A9A6)](https://www.npmjs.com/package/@ds-yoandry/react)
+[![npm angular](https://img.shields.io/npm/v/@ds-yoandry/angular?label=%40ds-yoandry%2Fangular&color=C1666B)](https://www.npmjs.com/package/@ds-yoandry/angular)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-### 1. Instalar dependencia
+---
 
-```bash
-npx expo install @react-native-async-storage/async-storage
+## ¿Qué es?
+
+Dale 5 colores de [Coolors.co](https://coolors.co) y obtienes automáticamente:
+
+- Escala de grises uniforme (50–900)
+- Variantes de estado para cada color (light / main / dark / disabled)
+- Colores de texto con contraste **WCAG AA** garantizado
+- Paleta completa para modo claro y oscuro
+- Escalas de opacidad para overlays
+- Hook `useTheme()` con API plana — sin navegación profunda
+
+```tsx
+// ❌ Antes
+colors.variants.primary.main
+colors.surface.background
+platform.shadow.md
+
+// ✅ Con useTheme()
+const { primary, bg, shadow } = useTheme();
 ```
 
-### 2. Envolver la app con ThemeProvider
+---
+
+## Paquetes
+
+| Paquete | Descripción | Instalación |
+|---------|-------------|-------------|
+| [`@ds-yoandry/core`](./packages/core/README.md) | Motor agnóstico de framework | `npm i @ds-yoandry/core` |
+| [`@ds-yoandry/react`](./packages/react/README.md) | Hook + Provider para React / React Native | `npm i @ds-yoandry/react` |
+| [`@ds-yoandry/angular`](./packages/angular/README.md) | Service + Signals para Angular 16+ | `npm i @ds-yoandry/angular` |
+
+---
+
+## Inicio rápido
+
+### React Native (Expo)
+
+```bash
+npm install @ds-yoandry/react @react-native-async-storage/async-storage
+```
 
 ```tsx
 // app/_layout.tsx
-import { ThemeProvider, useTheme } from '@/utils/designSystem';
+import { ThemeProvider } from '@ds-yoandry/react';
 
 export default function RootLayout() {
     return (
         <ThemeProvider defaultTheme="system">
-            <ThemedApp />
+            <Stack />
         </ThemeProvider>
-    );
-}
-
-function ThemedApp() {
-    const { bg, isDark } = useTheme();
-    return (
-        <Stack screenOptions={{ contentStyle: { backgroundColor: bg } }} />
     );
 }
 ```
 
-### 3. Usar en componentes
-
 ```tsx
-import { useTheme } from '@/utils/designSystem';
+// Cualquier componente
+import { useTheme } from '@ds-yoandry/react';
 
-function MiComponente() {
-    const { bg, text, primary, shadow, isDark, toggleTheme } = useTheme();
+function MyCard() {
+    const { bg, text, primary, shadow, toggleTheme } = useTheme();
 
     return (
         <View style={[{ backgroundColor: bg }, shadow.md]}>
             <Text style={{ color: text }}>Hola mundo</Text>
-            <TouchableOpacity 
-                style={{ backgroundColor: primary, padding: 12, borderRadius: 8 }}
+            <TouchableOpacity
+                style={{ backgroundColor: primary }}
                 onPress={toggleTheme}
             >
-                <Text style={{ color: '#FFF' }}>{isDark ? '☀️ Claro' : '🌙 Oscuro'}</Text>
+                <Text>Cambiar tema</Text>
             </TouchableOpacity>
         </View>
     );
 }
 ```
 
----
+### Angular
 
-## 📖 API del Hook `useTheme()`
-
-### Colores Directos
-
-| Propiedad | Descripción | Ejemplo |
-|-----------|-------------|---------|
-| `bg` | Background principal | `{ backgroundColor: bg }` |
-| `surface` | Cards, modales | `{ backgroundColor: surface }` |
-| `surfaceElevated` | Dropdowns, tooltips | `{ backgroundColor: surfaceElevated }` |
-| `text` | Texto principal | `{ color: text }` |
-| `textSecondary` | Texto secundario | `{ color: textSecondary }` |
-| `textMuted` | Placeholder, hints | `{ color: textMuted }` |
-| `textDisabled` | Texto deshabilitado | `{ color: textDisabled }` |
-
-### Colores de Marca
-
-| Propiedad | Descripción | Uso típico |
-|-----------|-------------|------------|
-| `primary` | Color principal | Botones, CTAs |
-| `primaryLight` | Primary claro | Hover, fondos |
-| `primaryDark` | Primary oscuro | Pressed |
-| `secondary` | Color secundario | Acentos |
-| `danger` | Rojo | Errores, gastos, eliminar |
-| `success` | Verde | Éxito, ingresos, confirmar |
-| `warning` | Amarillo | Alertas, advertencias |
-
-### Texto sobre Colores
-
-| Propiedad | Uso |
-|-----------|-----|
-| `onPrimary` | Texto sobre botón primary |
-| `onSecondary` | Texto sobre botón secondary |
-| `onDanger` | Texto sobre botón danger |
-| `onSuccess` | Texto sobre botón success |
-| `onWarning` | Texto sobre botón warning |
-
-### Utilidades
-
-| Propiedad | Descripción | Ejemplo |
-|-----------|-------------|---------|
-| `shadow` | Sombras por plataforma | `shadow.sm`, `shadow.md`, `shadow.lg`, `shadow.xl` |
-| `gray` | Escala de grises | `gray[100]`, `gray[500]`, `gray[900]` |
-| `border` | Color para bordes | `{ borderColor: border }` |
-| `divider` | Color para divisores | `{ backgroundColor: divider }` |
-
-### Control de Tema
-
-| Propiedad | Tipo | Descripción |
-|-----------|------|-------------|
-| `isDark` | `boolean` | `true` si modo oscuro activo |
-| `themeMode` | `'light' \| 'dark' \| 'system'` | Modo actual |
-| `setTheme` | `(mode) => void` | Cambiar tema: `setTheme('dark')` |
-| `toggleTheme` | `() => void` | Alternar claro/oscuro |
-
-### Acceso Avanzado
-
-| Propiedad | Descripción |
-|-----------|-------------|
-| `colors` | Objeto completo de colores (estructura anidada) |
-| `platform` | Sombras y feedback táctil |
-| `designSystem` | Design System completo |
-
----
-
-## 🎨 Hooks Adicionales
-
-```tsx
-// Solo colores esenciales
-const { bg, text, primary } = useColors();
-
-// Solo sombras
-const shadow = useShadow();
-<View style={shadow.md} />
-
-// Solo estado dark/light
-const isDark = useIsDark();
+```bash
+npm install @ds-yoandry/angular
 ```
 
----
+```typescript
+// main.ts
+import { provideDesignSystem } from '@ds-yoandry/angular';
 
-## ⚙️ Configuración del Provider
-
-```tsx
-<ThemeProvider
-    defaultTheme="system"        // 'light' | 'dark' | 'system'
-    palette={customPalette}      // Opcional: paleta personalizada
-    storageKey="@my_app_theme"   // Opcional: key para AsyncStorage
->
-    {children}
-</ThemeProvider>
-```
-
-### Paleta Personalizada
-
-```tsx
-<ThemeProvider
-    palette={{
-        primary: '#FF6B35',
-        secondary: '#004E89',
-        background: '#F5F5F5',
-        warning: '#FFD166',
-        danger: '#EF476F',
-        success: '#06D6A0',  // Opcional
-    }}
->
-```
-
----
-
-## 📁 Estructura de Archivos
-
-```
-utils/designSystem/
-├── index.js              # Exportaciones públicas
-├── index.d.ts            # Tipos TypeScript
-├── palette.js            # Paleta por defecto
-├── ThemeContext.tsx      # Provider y Context
-├── useTheme.ts           # Hook principal
-├── createDesignSystem.js # Generador del sistema
-├── themeManager.js       # Gestor de múltiples temas
-├── cache.js              # Memoización
-├── converters.js         # hex ↔ rgb ↔ hsl ↔ rgba
-├── manipulators.js       # lighten, darken, mix, etc.
-├── accessibility.js      # WCAG, contraste
-├── generators.js         # Escalas, variantes
-├── platform.js           # Platform.select, sombras
-├── validators.js         # Validación de colores
-├── types.js              # Definiciones JSDoc
-└── README.md             # Esta documentación
-```
-
----
-
-## 🔧 Uso sin Hook (Legacy)
-
-Para casos donde no puedes usar hooks:
-
-```tsx
-import { DESIGN_SYSTEM } from '@/utils/designSystem';
-
-const { colors, platform } = DESIGN_SYSTEM;
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: colors.surface.background,
-    },
-    card: {
-        backgroundColor: colors.surface.elevated,
-        ...platform.shadow.md,
-    },
-    button: {
-        backgroundColor: colors.variants.primary.main,
-    },
-    buttonText: {
-        color: colors.text.onPrimary,
-    },
+bootstrapApplication(AppComponent, {
+    providers: [provideDesignSystem()]
 });
 ```
 
----
+```typescript
+// app.component.ts
+import { injectTheme, ThemeDirective, ThemeColorPipe } from '@ds-yoandry/angular';
 
-## 🛠️ Utilidades de Color
-
-```tsx
-import { colorUtils } from '@/utils/designSystem';
-
-// Conversiones
-colorUtils.hexToRgb('#4357AD');         // { r: 67, g: 87, b: 173 }
-colorUtils.hexToRgba('#4357AD', 0.5);   // 'rgba(67, 87, 173, 0.5)'
-colorUtils.rgbToHsl(67, 87, 173);       // { h: 228, s: 44, l: 47 }
-
-// Manipulación
-colorUtils.lighten('#4357AD', 20);      // Más claro
-colorUtils.darken('#4357AD', 15);       // Más oscuro
-colorUtils.saturate('#4357AD', 20);     // Más vibrante
-colorUtils.desaturate('#4357AD', 30);   // Más apagado
-colorUtils.mix('#4357AD', '#FFF', 0.3); // Mezcla 70/30
-
-// Accesibilidad WCAG
-colorUtils.getContrastRatio('#000', '#FFF');   // 21
-colorUtils.meetsContrastAA('#333', '#FFF');    // true
-colorUtils.meetsContrastAAA('#333', '#FFF');   // true
-colorUtils.getContrastColor('#4357AD');        // '#FFFFFF' o '#000000'
-colorUtils.ensureContrast('#888', '#FFF');     // Ajusta para cumplir 4.5:1
-
-// Validación
-colorUtils.isValidHex('#4357AD');       // true
-colorUtils.normalizeHex('4357AD');      // '#4357AD'
-```
-
----
-
-## 🎭 Temas Predefinidos
-
-```tsx
-import { createThemeManager, PRESET_THEMES } from '@/utils/designSystem';
-
-const manager = createThemeManager([
-    PRESET_THEMES.light,
-    PRESET_THEMES.dark,
-    PRESET_THEMES.ocean,
-    PRESET_THEMES.forest,
-    PRESET_THEMES.sunset,
-], 'light');
-
-manager.setTheme('dark');
-const colors = manager.current.colors;
-```
-
----
-
-## ✅ Características
-
-- 🎨 Generación automática desde paleta de 5-6 colores
-- 🌗 Modo claro/oscuro con detección del sistema
-- 💾 Persistencia de preferencia en AsyncStorage
-- ♿ Contraste WCAG AA garantizado
-- 📱 Sombras nativas iOS/Android (Platform.select)
-- ⚡ Memoización y caché para rendimiento
-- 🔄 Re-render automático al cambiar tema
-- 📐 Escala de grises uniforme (50-900)
-- 🎯 API simplificada sin navegación profunda
-
----
-
-## 📋 Paleta por Defecto
-
-```javascript
-{
-    primary: '#4357AD',      // Ocean Twilight - Azul profundo
-    secondary: '#48A9A6',    // Tropical Teal - Verde azulado
-    background: '#E4DFDA',   // Dust Grey - Gris cálido
-    warning: '#D4B483',      // Soft Fawn - Dorado suave
-    danger: '#C1666B',       // Lobster Pink - Rosa coral
-    success: '#22C55E',      // Emerald - Verde éxito
+@Component({
+    standalone: true,
+    imports: [ThemeDirective, ThemeColorPipe],
+    template: `
+        <div appTheme bg="bg" color="text">
+            <button
+                [style.background]="'primary' | themeColor"
+                [style.color]="'onPrimary' | themeColor"
+                (click)="theme.toggleTheme()"
+            >
+                {{ theme.isDark() ? '☀️ Claro' : '🌙 Oscuro' }}
+            </button>
+        </div>
+    `
+})
+export class AppComponent {
+    theme = injectTheme();
 }
 ```
 
+### Solo el core (vanilla JS/TS)
+
+```bash
+npm install @ds-yoandry/core
+```
+
+```typescript
+import { createDesignSystem } from '@ds-yoandry/core';
+
+const system = createDesignSystem({
+    primary: '#4357AD',
+    secondary: '#48A9A6',
+    background: '#E4DFDA',
+    warning: '#D4B483',
+    danger: '#C1666B',
+});
+
+system.colors.variants.primary.main   // '#4357AD'
+system.colors.text.onPrimary          // '#FFFFFF' (WCAG AA)
+system.colors.gray[500]               // Gris medio
+system.colors.dark.background         // Fondo para modo oscuro
+```
+
 ---
 
-## 📌 Versión
+## Paleta por defecto
 
-**4.2.0** - Con hook simplificado `useTheme()`
+```typescript
+import { DEFAULT_PALETTE } from '@ds-yoandry/core';
 
-## 👤 Autor
+// {
+//     primary:    '#4357AD'  — Ocean Twilight
+//     secondary:  '#48A9A6'  — Tropical Teal
+//     background: '#E4DFDA'  — Dust Grey
+//     warning:    '#D4B483'  — Soft Fawn
+//     danger:     '#C1666B'  — Lobster Pink
+//     success:    '#22C55E'  — Emerald (generado automáticamente si no se provee)
+// }
+```
 
-Yoandry - 2026
+---
+
+## Características
+
+- ✅ **Framework agnostic** — el core no tiene dependencias externas
+- ✅ **WCAG AA** — contraste garantizado en todos los colores de texto
+- ✅ **Modo oscuro** — paleta completa generada automáticamente
+- ✅ **TypeScript** — tipos completos incluidos
+- ✅ **Caché** — memoización automática por paleta
+- ✅ **Signals** (Angular) — reactividad nativa sin Zone.js
+- ✅ **AsyncStorage** (React Native) — persistencia de tema
+- ✅ **API plana** — `useTheme()` sin profundidad de objetos
+- ✅ **Tree-shakeable** — solo se incluye lo que se usa
+- ✅ **83 tests** — cobertura del core
+
+---
+
+## Estructura del monorepo
+
+```
+ds-yoandry/
+├── packages/
+│   ├── core/          # @ds-yoandry/core
+│   ├── react/         # @ds-yoandry/react
+│   └── angular/       # @ds-yoandry/angular
+├── apps/
+│   └── demo-react/    # App demo con Expo
+├── tools/
+│   └── config/        # tsconfig compartido
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+└── LICENSE
+```
+
+---
+
+## Desarrollo local
+
+```bash
+# Requisitos: Node >= 18, pnpm >= 9
+pnpm install
+
+# Build todos los packages
+pnpm build
+
+# Tests del core
+pnpm test
+
+# Correr la demo
+cd apps/demo-react && npx expo start
+```
+
+---
+
+## Documentación
+
+- [Guía completa de @ds-yoandry/core](./packages/core/README.md)
+- [Guía completa de @ds-yoandry/react](./packages/react/README.md)
+- [Guía completa de @ds-yoandry/angular](./packages/angular/README.md)
+- [CHANGELOG](./CHANGELOG.md)
+- [CONTRIBUTING](./CONTRIBUTING.md)
+
+---
+
+## Licencia
+
+MIT © [Yoandry](https://github.com/YoandryF)
