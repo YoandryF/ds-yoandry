@@ -1,6 +1,6 @@
 {
   "name": "@yoandryf/core",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Design System Core - Framework agnostic color utilities with WCAG AA accessibility",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
