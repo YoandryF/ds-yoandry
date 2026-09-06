@@ -1,0 +1,15 @@
+# Source
+src/
+
+# Tests
+**/__tests__/
+**/*.test.ts
+**/*.spec.ts
+
+# Config
+tsconfig.json
+tsup.config.ts
+
+# Misc
+*.log
+.DS_Store
