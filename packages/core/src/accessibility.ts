@@ -1,6 +1,6 @@
 /**
  * @fileoverview Funciones de contraste y accesibilidad WCAG 2.1
- * @module @ds-yoandry/core/accessibility
+ * @module @yoandryf/core/accessibility
  * @description Proporciona utilidades para verificar y garantizar contraste
  * accesible según las pautas WCAG 2.1.
  *

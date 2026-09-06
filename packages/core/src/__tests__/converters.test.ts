@@ -1,6 +1,6 @@
 /**
  * @fileoverview Tests para converters.ts
- * @module @ds-yoandry/core/__tests__/converters
+ * @module @yoandryf/core/__tests__/converters
  */
 
 import { hexToRgb, rgbToHex, hexToRgba, rgbToHsl, hslToRgb } from '../converters';

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Tests para createDesignSystem.ts
- * @module @ds-yoandry/core/__tests__/createDesignSystem
+ * @module @yoandryf/core/__tests__/createDesignSystem
  */
 
 import { createDesignSystem } from '../createDesignSystem';

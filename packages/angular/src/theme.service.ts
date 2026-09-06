@@ -1,6 +1,6 @@
 /**
  * @fileoverview Servicio de tema para Angular 20+
- * @module @ds-yoandry/angular/theme.service
+ * @module @yoandryf/angular/theme.service
  *
  * @author Yoandry
  * @version 4.2.0
@@ -16,8 +16,8 @@ import {
     DestroyRef,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { createDesignSystem, DEFAULT_PALETTE } from '@ds-yoandry/core';
-import type { BrandPalette, DesignSystem, GrayScale } from '@ds-yoandry/core';
+import { createDesignSystem, DEFAULT_PALETTE } from '@yoandryf/core';
+import type { BrandPalette, DesignSystem, GrayScale } from '@yoandryf/core';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -66,7 +66,7 @@ export interface ThemeColors {
  *
  * @example
  * // Proveer en main.ts
- * import { provideDesignSystem } from '@ds-yoandry/angular';
+ * import { provideDesignSystem } from '@yoandryf/angular';
  *
  * bootstrapApplication(AppComponent, {
  *     providers: [provideDesignSystem()]

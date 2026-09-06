@@ -1,6 +1,6 @@
 /**
  * @fileoverview Funciones de conversión entre formatos de color
- * @module @ds-yoandry/core/converters
+ * @module @yoandryf/core/converters
  * @description Proporciona utilidades para convertir colores entre diferentes
  * formatos: hexadecimal, RGB, HSL y RGBA.
  *

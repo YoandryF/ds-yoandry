@@ -1,6 +1,6 @@
 /**
  * @fileoverview Design System Core - Framework agnostic
- * @module @ds-yoandry/core
+ * @module @yoandryf/core
  * @description Sistema de diseño completo agnóstico de framework.
  * Incluye conversión de colores, accesibilidad WCAG, generadores
  * de escalas y variantes, y utilidades de plataforma.
@@ -9,7 +9,7 @@
  * @version 4.2.0
  *
  * @example
- * import { createDesignSystem, DEFAULT_PALETTE } from '@ds-yoandry/core';
+ * import { createDesignSystem, DEFAULT_PALETTE } from '@yoandryf/core';
  *
  * const system = createDesignSystem({
  *     primary: '#4357AD',

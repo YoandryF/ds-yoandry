@@ -1,6 +1,6 @@
 /**
  * @fileoverview Directiva para aplicar colores del tema en templates
- * @module @ds-yoandry/angular/theme.directive
+ * @module @yoandryf/angular/theme.directive
  *
  * @author Yoandry
  * @version 4.2.0

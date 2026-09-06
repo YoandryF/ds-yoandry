@@ -1,6 +1,6 @@
 /**
  * @fileoverview Definiciones de tipos TypeScript del Design System Core
- * @module @ds-yoandry/core/types
+ * @module @yoandryf/core/types
  *
  * @author Yoandry
  * @version 4.2.0

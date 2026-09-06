@@ -1,6 +1,6 @@
 /**
  * @fileoverview Tests para accessibility.ts
- * @module @ds-yoandry/core/__tests__/accessibility
+ * @module @yoandryf/core/__tests__/accessibility
  */
 
 import {

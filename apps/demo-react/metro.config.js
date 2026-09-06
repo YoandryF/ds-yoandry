@@ -23,8 +23,8 @@ config.resolver.nodeModulesPaths = [
 
 // 3. Apuntar @ds-yoandry/* al source TypeScript directamente
 config.resolver.extraNodeModules = {
-    '@ds-yoandry/core': path.resolve(monorepoRoot, 'packages/core/src'),
-    '@ds-yoandry/react': path.resolve(monorepoRoot, 'packages/react/src'),
+    '@yoandryf/core': path.resolve(monorepoRoot, 'packages/core/src'),
+    '@yoandryf/react': path.resolve(monorepoRoot, 'packages/react/src'),
 };
 
 // 4. Asegurar que Metro procese .ts y .tsx de los packages

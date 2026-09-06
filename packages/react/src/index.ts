@@ -1,6 +1,6 @@
 /**
  * @fileoverview Design System para React y React Native
- * @module @ds-yoandry/react
+ * @module @yoandryf/react
  * @description Bindings de React/React Native para el Design System.
  * Incluye ThemeProvider, useTheme y hooks auxiliares.
  *
@@ -9,7 +9,7 @@
  *
  * @example
  * // 1. Envolver la app
- * import { ThemeProvider } from '@ds-yoandry/react';
+ * import { ThemeProvider } from '@yoandryf/react';
  *
  * export default function App() {
  *     return (
@@ -21,7 +21,7 @@
  *
  * @example
  * // 2. Usar en componentes
- * import { useTheme } from '@ds-yoandry/react';
+ * import { useTheme } from '@yoandryf/react';
  *
  * function MyButton() {
  *     const { primary, onPrimary, shadow } = useTheme();
@@ -38,7 +38,7 @@
 // RE-EXPORTAR CORE (todo disponible desde un solo paquete)
 // =============================================================================
 
-export * from '@ds-yoandry/core';
+export * from '@yoandryf/core';
 
 // =============================================================================
 // PROVIDER Y CONTEXT

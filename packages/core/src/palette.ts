@@ -1,6 +1,6 @@
 /**
  * @fileoverview Paleta de colores por defecto del Design System
- * @module @ds-yoandry/core/palette
+ * @module @yoandryf/core/palette
  *
  * @author Yoandry
  * @version 4.2.0
@@ -13,7 +13,7 @@ import type { BrandPalette } from './types';
  * Paleta por defecto basada en Coolors.co.
  *
  * @example
- * import { DEFAULT_PALETTE, createDesignSystem } from '@ds-yoandry/core';
+ * import { DEFAULT_PALETTE, createDesignSystem } from '@yoandryf/core';
  *
  * // Usar directamente
  * const system = createDesignSystem(DEFAULT_PALETTE);

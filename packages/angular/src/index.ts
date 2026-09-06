@@ -1,6 +1,6 @@
 /**
  * @fileoverview Design System para Angular 16+
- * @module @ds-yoandry/angular
+ * @module @yoandryf/angular
  * @description Bindings de Angular para el Design System.
  * Incluye ThemeService con Signals, directiva, pipe y providers.
  *
@@ -9,7 +9,7 @@
  *
  * @example
  * // 1. Proveer en main.ts
- * import { provideDesignSystem } from '@ds-yoandry/angular';
+ * import { provideDesignSystem } from '@yoandryf/angular';
  *
  * bootstrapApplication(AppComponent, {
  *     providers: [provideDesignSystem()]
@@ -17,7 +17,7 @@
  *
  * @example
  * // 2. Usar en componente (Signals API)
- * import { injectTheme } from '@ds-yoandry/angular';
+ * import { injectTheme } from '@yoandryf/angular';
  *
  * @Component({
  *     standalone: true,
@@ -40,7 +40,7 @@
 // RE-EXPORTAR CORE
 // =============================================================================
 
-export * from '@ds-yoandry/core';
+export * from '@yoandryf/core';
 
 // =============================================================================
 // SERVICIO

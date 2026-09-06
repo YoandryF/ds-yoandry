@@ -1,6 +1,6 @@
 /**
  * @fileoverview Funciones de inyección y providers para Angular
- * @module @ds-yoandry/angular/inject
+ * @module @yoandryf/angular/inject
  *
  * @author Yoandry
  * @version 4.2.0
@@ -8,7 +8,7 @@
 
 import { inject, Provider } from '@angular/core';
 import { ThemeService } from './theme.service';
-import type { BrandPalette } from '@ds-yoandry/core';
+import type { BrandPalette } from '@yoandryf/core';
 
 /**
  * Inyecta el ThemeService en un componente o servicio.

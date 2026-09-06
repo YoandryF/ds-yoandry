@@ -1,6 +1,6 @@
 /**
  * @fileoverview Componente selector de paleta de colores
- * @module @ds-yoandry/react/PaletteSelector
+ * @module @yoandryf/react/PaletteSelector
  *
  * @author Yoandry
  * @version 4.3.0
@@ -16,7 +16,7 @@ import { useTheme } from './useTheme';
  * Marca la paleta activa y persiste la selección automáticamente.
  *
  * @example
- * import { PaletteSelector } from '@ds-yoandry/react';
+ * import { PaletteSelector } from '@yoandryf/react';
  *
  * function SettingsScreen() {
  *     return (

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Hook simplificado para acceder al tema
- * @module @ds-yoandry/react/useTheme
+ * @module @yoandryf/react/useTheme
  *
  * @author Yoandry
  * @version 4.2.0
@@ -9,7 +9,7 @@
 import { useContext, useMemo } from 'react';
 import { ThemeContext } from './ThemeContext';
 import type { ThemeMode } from './ThemeContext';
-import type { PlatformShadows } from '@ds-yoandry/core';
+import type { PlatformShadows } from '@yoandryf/core';
 
 /**
  * Hook para acceder al tema con API simplificada y plana.
@@ -64,7 +64,7 @@ export function useTheme() {
         throw new Error(
             '[useTheme] debe usarse dentro de un <ThemeProvider>.\n\n' +
             'Envuelve tu app en app/_layout.tsx:\n\n' +
-            'import { ThemeProvider } from "@ds-yoandry/react";\n\n' +
+            'import { ThemeProvider } from "@yoandryf/react";\n\n' +
             '<ThemeProvider defaultTheme="system">\n' +
             '    <Stack />\n' +
             '</ThemeProvider>'

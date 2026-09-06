@@ -1,6 +1,6 @@
 /**
  * @fileoverview Funciones de validación de colores
- * @module @ds-yoandry/core/validators
+ * @module @yoandryf/core/validators
  * @description Proporciona utilidades para validar y normalizar colores hexadecimales.
  *
  * @author Yoandry

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
-    "@ds-yoandry/react": "workspace:*",
+    "@yoandryf/react": "workspace:*",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "expo": "~57.0.20",
     "expo-modules-core": "~57.0.16",

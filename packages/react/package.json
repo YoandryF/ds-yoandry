@@ -1,5 +1,5 @@
 {
-  "name": "@ds-yoandry/react",
+  "name": "@yoandryf/react",
   "version": "4.2.0",
   "description": "Design System for React and React Native with theme hook",
   "main": "dist/index.js",
@@ -22,7 +22,7 @@
     }
   },
   "dependencies": {
-    "@ds-yoandry/core": "workspace:*"
+    "@yoandryf/core": "workspace:*"
   },
   "scripts": {
     "build": "tsup",

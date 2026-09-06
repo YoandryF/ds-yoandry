@@ -1,6 +1,6 @@
 /**
  * @fileoverview Funciones de manipulación de colores
- * @module @ds-yoandry/core/manipulators
+ * @module @yoandryf/core/manipulators
  * @description Proporciona utilidades para modificar colores: aclarar, oscurecer,
  * saturar, desaturar, mezclar, rotar tonos y más.
  *

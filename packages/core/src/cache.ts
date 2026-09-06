@@ -1,6 +1,6 @@
 /**
  * @fileoverview Sistema de caché y memoización para Design System
- * @module @ds-yoandry/core/cache
+ * @module @yoandryf/core/cache
  * @description Proporciona funcionalidades de caché para evitar recalcular
  * sistemas de diseño con la misma paleta de colores.
  *

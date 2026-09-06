@@ -1,6 +1,6 @@
 /**
  * @fileoverview Utilidades de sombras y feedback por plataforma
- * @module @ds-yoandry/core/platform
+ * @module @yoandryf/core/platform
  * @description Genera definiciones de sombras y feedback táctil.
  * Los valores son platform-agnostic en el core - el binding de React Native
  * aplica Platform.select() al consumirlos.

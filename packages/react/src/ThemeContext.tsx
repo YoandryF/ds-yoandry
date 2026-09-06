@@ -1,6 +1,6 @@
 /**
  * @fileoverview Context y Provider para el sistema de temas
- * @module @ds-yoandry/react/ThemeContext
+ * @module @yoandryf/react/ThemeContext
  *
  * @author Yoandry
  * @version 4.3.0
@@ -15,9 +15,9 @@ import React, {
 } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createDesignSystem } from '@ds-yoandry/core';
-import { DEFAULT_PALETTE } from '@ds-yoandry/core';
-import type { BrandPalette } from '@ds-yoandry/core';
+import { createDesignSystem } from '@yoandryf/core';
+import { DEFAULT_PALETTE } from '@yoandryf/core';
+import type { BrandPalette } from '@yoandryf/core';
 
 // =============================================================================
 // PALETAS PREDEFINIDAS

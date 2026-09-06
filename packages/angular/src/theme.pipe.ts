@@ -1,6 +1,6 @@
 /**
  * @fileoverview Pipe para obtener colores del tema en templates
- * @module @ds-yoandry/angular/theme.pipe
+ * @module @yoandryf/angular/theme.pipe
  *
  * @author Yoandry
  * @version 4.2.0

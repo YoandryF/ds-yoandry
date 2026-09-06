@@ -1,6 +1,6 @@
 /**
  * @fileoverview Generadores de escalas y variantes de colores
- * @module @ds-yoandry/core/generators
+ * @module @yoandryf/core/generators
  * @description Proporciona funciones para generar escalas de grises,
  * variantes de colores para estados UI, escalas de opacidad y colores complementarios.
  *

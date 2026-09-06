@@ -1,6 +1,6 @@
 /**
  * @fileoverview Función principal para crear el sistema de diseño
- * @module @ds-yoandry/core/createDesignSystem
+ * @module @yoandryf/core/createDesignSystem
  * @description Genera un sistema de diseño completo a partir de una paleta de colores.
  *
  * @author Yoandry
