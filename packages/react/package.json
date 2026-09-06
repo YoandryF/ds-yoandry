@@ -1,14 +1,14 @@
 {
   "name": "@yoandryf/react",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Design System for React and React Native with theme hook",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.esm.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     }
   },
