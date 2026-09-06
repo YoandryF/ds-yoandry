@@ -279,3 +279,49 @@ import {
     DEFAULT_PALETTE,
 } from '@ds-yoandry/react';
 ```
+
+
+---
+
+## Paletas predefinidas
+
+El paquete incluye 4 paletas listas para usar:
+
+| Nombre | Label | Primary |
+|--------|-------|---------|
+| `default` | Clásico | `#4357AD` |
+| `ocean` | Océano | `#0077B6` |
+| `forest` | Bosque | `#2D6A4F` |
+| `sunset` | Atardecer | `#FF6B35` |
+
+```tsx
+// Paleta inicial
+<ThemeProvider defaultPalette="ocean">
+    <App />
+</ThemeProvider>
+```
+
+```tsx
+// Cambiar paleta en runtime
+const { paletteName, setPalette, availablePalettes } = useTheme();
+
+setPalette('forest');   // Cambia y persiste en AsyncStorage
+```
+
+### `PaletteSelector` — componente listo
+
+```tsx
+import { PaletteSelector } from '@ds-yoandry/react';
+
+// Chips con preview de color, marca la activa
+<PaletteSelector />
+```
+
+### Paleta completamente custom
+
+```tsx
+// Ignora defaultPalette y el selector
+<ThemeProvider palette={{ primary: '#FF6B35', secondary: '...', ... }}>
+    <App />
+</ThemeProvider>
+```

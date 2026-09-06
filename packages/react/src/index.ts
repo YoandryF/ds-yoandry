@@ -44,11 +44,17 @@ export * from '@ds-yoandry/core';
 // PROVIDER Y CONTEXT
 // =============================================================================
 
-export { ThemeProvider, ThemeContext } from './ThemeContext';
-export type { ThemeMode, ThemeContextValue, ThemeProviderProps } from './ThemeContext';
+export { ThemeProvider, ThemeContext, PALETTES, AVAILABLE_PALETTES } from './ThemeContext';
+export type { ThemeMode, ThemeContextValue, ThemeProviderProps, PaletteName, PaletteInfo } from './ThemeContext';
 
 // =============================================================================
 // HOOKS
 // =============================================================================
 
 export { useTheme, useColors, useShadow, useIsDark } from './useTheme';
+
+// =============================================================================
+// COMPONENTES
+// =============================================================================
+
+export { PaletteSelector } from './PaletteSelector';

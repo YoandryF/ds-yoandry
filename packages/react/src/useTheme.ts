@@ -158,6 +158,16 @@ export function useTheme() {
         toggleTheme,
 
         // -----------------------------------------------------------------------
+        // PALETAS
+        // -----------------------------------------------------------------------
+        /** Nombre de la paleta activa: 'default' | 'ocean' | 'forest' | 'sunset' */
+        paletteName: ctx.paletteName,
+        /** Cambiar paleta: setPalette('ocean') */
+        setPalette: ctx.setPalette,
+        /** Lista de paletas disponibles con metadatos para selectores */
+        availablePalettes: ctx.availablePalettes,
+
+        // -----------------------------------------------------------------------
         // ACCESO COMPLETO (para casos avanzados)
         // -----------------------------------------------------------------------
         /** Todos los colores organizados */
@@ -167,7 +177,7 @@ export function useTheme() {
         /** Design System completo */
         designSystem,
 
-    }), [colors, platform, isDark, themeMode, setThemeMode, toggleTheme, designSystem, gray]);
+    }), [colors, platform, isDark, themeMode, setThemeMode, toggleTheme, designSystem, gray, ctx.paletteName, ctx.setPalette, ctx.availablePalettes]);
 }
 
 /**

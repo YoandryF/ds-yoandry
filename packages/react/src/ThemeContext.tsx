@@ -3,7 +3,7 @@
  * @module @ds-yoandry/react/ThemeContext
  *
  * @author Yoandry
- * @version 4.2.0
+ * @version 4.3.0
  */
 
 import React, {
@@ -20,6 +20,72 @@ import { DEFAULT_PALETTE } from '@ds-yoandry/core';
 import type { BrandPalette } from '@ds-yoandry/core';
 
 // =============================================================================
+// PALETAS PREDEFINIDAS
+// =============================================================================
+
+/**
+ * Paletas de colores incluidas en el paquete.
+ * El usuario puede elegir entre ellas en runtime o definir las suyas.
+ */
+export const PALETTES = {
+    default: {
+        primary: '#4357AD',
+        secondary: '#48A9A6',
+        background: '#E4DFDA',
+        warning: '#D4B483',
+        danger: '#C1666B',
+        success: '#22C55E',
+    },
+    ocean: {
+        primary: '#0077B6',
+        secondary: '#00B4D8',
+        background: '#CAF0F8',
+        warning: '#FFB703',
+        danger: '#E63946',
+        success: '#06D6A0',
+    },
+    forest: {
+        primary: '#2D6A4F',
+        secondary: '#40916C',
+        background: '#F0F4F0',
+        warning: '#E9C46A',
+        danger: '#BC4749',
+        success: '#52B788',
+    },
+    sunset: {
+        primary: '#FF6B35',
+        secondary: '#F7C59F',
+        background: '#FFFAF5',
+        warning: '#FFD166',
+        danger: '#EF476F',
+        success: '#06D6A0',
+    },
+} as const satisfies Record<string, Required<BrandPalette>>;
+
+/** Nombres de las paletas incluidas */
+export type PaletteName = keyof typeof PALETTES;
+
+/**
+ * Metadatos de una paleta para construir selectores en la UI.
+ */
+export interface PaletteInfo {
+    /** Identificador de la paleta */
+    name: PaletteName;
+    /** Etiqueta legible para mostrar al usuario */
+    label: string;
+    /** Color representativo para previsualización (el primary) */
+    swatch: string;
+}
+
+/** Lista de paletas disponibles con metadatos */
+export const AVAILABLE_PALETTES: PaletteInfo[] = [
+    { name: 'default', label: 'Clásico',    swatch: PALETTES.default.primary },
+    { name: 'ocean',   label: 'Océano',     swatch: PALETTES.ocean.primary },
+    { name: 'forest',  label: 'Bosque',     swatch: PALETTES.forest.primary },
+    { name: 'sunset',  label: 'Atardecer',  swatch: PALETTES.sunset.primary },
+];
+
+// =============================================================================
 // TIPOS
 // =============================================================================
 
@@ -32,17 +98,30 @@ export interface ThemeContextValue {
     themeMode: ThemeMode;
     setThemeMode: (mode: ThemeMode) => void;
     toggleTheme: () => void;
+    /** Nombre de la paleta activa */
+    paletteName: PaletteName;
+    /** Cambiar la paleta activa (persiste en AsyncStorage) */
+    setPalette: (name: PaletteName) => void;
+    /** Lista de paletas disponibles para construir selectores */
+    availablePalettes: PaletteInfo[];
     designSystem: ReturnType<typeof createDesignSystem>;
 }
 
 export interface ThemeProviderProps {
     children: React.ReactNode;
-    /** Tema inicial: 'light' | 'dark' | 'system' (default: 'system') */
+    /** Tema inicial: 'light' | 'dark' | 'system' — default: 'system' */
     defaultTheme?: ThemeMode;
-    /** Paleta personalizada (opcional) */
+    /** Paleta inicial por nombre — default: 'default' */
+    defaultPalette?: PaletteName;
+    /**
+     * Paleta completamente personalizada.
+     * Si se pasa, ignora `defaultPalette` y el selector de paletas.
+     */
     palette?: BrandPalette;
-    /** Key para AsyncStorage (default: '@ds_theme') */
+    /** Key AsyncStorage para el modo de tema */
     storageKey?: string;
+    /** Key AsyncStorage para la paleta seleccionada */
+    paletteStorageKey?: string;
 }
 
 // =============================================================================
@@ -56,57 +135,61 @@ export const ThemeContext = createContext<ThemeContextValue | null>(null);
 // =============================================================================
 
 /**
- * Provider que envuelve la app y proporciona acceso al tema.
+ * Provider de tema con soporte para múltiples paletas predefinidas.
  *
- * - Detecta preferencia del sistema automáticamente
- * - Persiste la selección en AsyncStorage
- * - Re-renderiza componentes cuando cambia el tema
- * - Soporta paletas personalizadas
- *
- * @example
- * // En _layout.tsx (Expo Router) o App.tsx
- * import { ThemeProvider } from '@ds-yoandry/react';
- *
- * export default function App() {
- *     return (
- *         <ThemeProvider defaultTheme="system">
- *             <YourApp />
- *         </ThemeProvider>
- *     );
- * }
+ * - Detecta preferencia del sistema
+ * - Persiste modo y paleta en AsyncStorage
+ * - Paleta personalizada tiene prioridad sobre la seleccionada por nombre
  *
  * @example
- * // Con paleta personalizada
- * <ThemeProvider
- *     palette={{
- *         primary: '#FF6B35',
- *         secondary: '#004E89',
- *         background: '#F5F5F5',
- *         warning: '#FFD166',
- *         danger: '#EF476F',
- *     }}
- * >
- *     {children}
+ * // Modo básico — paleta por defecto, detecta el sistema
+ * <ThemeProvider>
+ *     <App />
+ * </ThemeProvider>
+ *
+ * @example
+ * // Paleta inicial específica
+ * <ThemeProvider defaultPalette="ocean" defaultTheme="dark">
+ *     <App />
+ * </ThemeProvider>
+ *
+ * @example
+ * // Paleta completamente custom
+ * <ThemeProvider palette={{ primary: '#FF6B35', ... }}>
+ *     <App />
  * </ThemeProvider>
  */
 export function ThemeProvider({
     children,
     defaultTheme = 'system',
-    palette = DEFAULT_PALETTE,
+    defaultPalette = 'default',
+    palette,
     storageKey = '@ds_theme',
+    paletteStorageKey = '@ds_palette',
 }: ThemeProviderProps) {
     const [themeMode, setThemeModeState] = useState<ThemeMode>(defaultTheme);
+    const [paletteName, setPaletteNameState] = useState<PaletteName>(defaultPalette);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const systemColorScheme = useColorScheme();
-    const designSystem = useMemo(() => createDesignSystem(palette), [palette]);
+
+    // Paleta activa: custom tiene prioridad, si no usa la seleccionada por nombre
+    const activePalette = useMemo<BrandPalette>(
+        () => palette ?? PALETTES[paletteName],
+        [palette, paletteName]
+    );
+
+    const designSystem = useMemo(
+        () => createDesignSystem(activePalette),
+        [activePalette]
+    );
 
     const isDark = useMemo(() => {
         if (themeMode === 'system') return systemColorScheme === 'dark';
         return themeMode === 'dark';
     }, [themeMode, systemColorScheme]);
 
-    // Colores resueltos según modo claro/oscuro
+    // Colores resueltos para el modo actual
     const colors = useMemo(() => {
         const { colors: ds } = designSystem;
 
@@ -117,7 +200,7 @@ export function ThemeProvider({
                     primary: ds.dark.textPrimary,
                     secondary: ds.dark.textSecondary,
                     tertiary: ds.dark.textTertiary,
-                    disabled: ds.gray[500],
+                    disabled: (ds.gray as unknown as Record<number, string>)[500],
                     onPrimary: ds.text.onPrimary,
                     onSecondary: ds.text.onSecondary,
                     onDanger: ds.text.onDanger,
@@ -137,31 +220,39 @@ export function ThemeProvider({
         return ds;
     }, [designSystem, isDark]);
 
-    // Cargar tema guardado
+    // Cargar preferencias guardadas
     useEffect(() => {
         const load = async () => {
             try {
-                const saved = await AsyncStorage.getItem(storageKey);
-                if (saved && ['light', 'dark', 'system'].includes(saved)) {
-                    setThemeModeState(saved as ThemeMode);
+                const [savedTheme, savedPalette] = await Promise.all([
+                    AsyncStorage.getItem(storageKey),
+                    AsyncStorage.getItem(paletteStorageKey),
+                ]);
+
+                if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+                    setThemeModeState(savedTheme as ThemeMode);
+                }
+                if (savedPalette && savedPalette in PALETTES) {
+                    setPaletteNameState(savedPalette as PaletteName);
                 }
             } catch {
-                // Continuar con el tema por defecto
+                // Continuar con los valores por defecto
             } finally {
                 setIsLoaded(true);
             }
         };
         load();
-    }, [storageKey]);
+    }, [storageKey, paletteStorageKey]);
 
     const setThemeMode = useCallback(async (mode: ThemeMode) => {
         setThemeModeState(mode);
-        try {
-            await AsyncStorage.setItem(storageKey, mode);
-        } catch {
-            // Fallar silenciosamente
-        }
+        try { await AsyncStorage.setItem(storageKey, mode); } catch { /* silent */ }
     }, [storageKey]);
+
+    const setPalette = useCallback(async (name: PaletteName) => {
+        setPaletteNameState(name);
+        try { await AsyncStorage.setItem(paletteStorageKey, name); } catch { /* silent */ }
+    }, [paletteStorageKey]);
 
     const toggleTheme = useCallback(() => {
         setThemeMode(isDark ? 'light' : 'dark');
@@ -174,10 +265,12 @@ export function ThemeProvider({
         themeMode,
         setThemeMode,
         toggleTheme,
+        paletteName,
+        setPalette,
+        availablePalettes: AVAILABLE_PALETTES,
         designSystem,
-    }), [colors, designSystem, isDark, themeMode, setThemeMode, toggleTheme]);
+    }), [colors, designSystem, isDark, themeMode, setThemeMode, toggleTheme, paletteName, setPalette]);
 
-    // Evitar flash de tema incorrecto mientras carga
     if (!isLoaded) return null;
 
     return (
