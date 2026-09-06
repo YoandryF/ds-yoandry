@@ -1,0 +1,38 @@
+{
+  "name": "@ds-yoandry/core",
+  "version": "4.2.0",
+  "description": "Design System Core - Framework agnostic color utilities with WCAG AA accessibility",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "lint": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0"
+  },
+  "files": ["dist", "README.md"],
+  "keywords": ["design-system", "colors", "wcag", "accessibility", "color-utils"],
+  "author": "Yoandry",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoandry/design-system"
+  }
+}
