@@ -42,5 +42,13 @@
   "files": ["dist", "README.md"],
   "keywords": ["design-system", "react", "react-native", "theme", "dark-mode", "hook"],
   "author": "Yoandry",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YoandryF/ds-yoandry.git",
+    "directory": "packages/react"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
 }

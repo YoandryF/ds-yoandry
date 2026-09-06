@@ -35,5 +35,13 @@
   "files": ["dist", "README.md"],
   "keywords": ["design-system", "angular", "theme", "signals", "dark-mode"],
   "author": "Yoandry",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YoandryF/ds-yoandry.git",
+    "directory": "packages/angular"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
 }

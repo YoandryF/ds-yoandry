@@ -33,6 +33,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yoandry/design-system"
+    "url": "https://github.com/YoandryF/ds-yoandry.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
