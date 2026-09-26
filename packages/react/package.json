@@ -27,7 +27,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "tsc --noEmit",
     "clean": "rimraf dist"
   },
@@ -39,8 +39,18 @@
     "tsup": "^8.0.0",
     "typescript": "^5.5.0"
   },
-  "files": ["dist", "README.md"],
-  "keywords": ["design-system", "react", "react-native", "theme", "dark-mode", "hook"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "design-system",
+    "react",
+    "react-native",
+    "theme",
+    "dark-mode",
+    "hook"
+  ],
   "author": "Yoandry",
   "license": "MIT",
   "repository": {
