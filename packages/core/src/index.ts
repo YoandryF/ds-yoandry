@@ -128,3 +128,20 @@ export { clearDesignSystemCache, getCacheStats } from './cache';
 // =============================================================================
 
 export { generatePlatformShadows, generatePlatformFeedback } from './platform';
+
+// =============================================================================
+// ARMONÍA DE COLORES
+// =============================================================================
+
+export {
+    suggestHarmonicPalette,
+    getHarmonicColors,
+    detectHarmonyStrategy,
+} from './harmony';
+
+export type {
+    HarmonyStrategy,
+    LockedColors,
+    HarmonicSuggestion,
+    SuggestHarmonicPaletteOptions,
+} from './harmony';

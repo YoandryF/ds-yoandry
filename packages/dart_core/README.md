@@ -122,6 +122,57 @@ normalizeHex('4357AD');  // '#4357AD'
 
 ---
 
+## Armonía de colores 🎨
+
+Genera paletas completas a partir de colores "bloqueados" (colores de marca que no deben cambiar).
+
+```dart
+// Con un solo color bloqueado
+final suggestions = suggestHarmonicPalette(
+  locked: LockedColors(primary: '#4357AD'),
+);
+// suggestions[0] = HarmonicSuggestion(
+//     primary: '#4357AD',    // bloqueado
+//     secondary: '#...',     // generado
+//     background: '#...',
+//     harmonyScore: 85,
+//     contrastScore: 78,
+//     score: 82,
+//     accessibilityPass: true,
+//     strategy: HarmonyStrategy.analogous,
+// )
+
+// Con estrategia específica
+final vibrant = suggestHarmonicPalette(
+  locked: LockedColors(primary: '#4357AD'),
+  strategy: HarmonyStrategy.triadic,
+  count: 5,
+  ensureAccessibility: false,
+  backgroundLightness: 95,
+);
+
+// Colores armónicos simples
+final colors = getHarmonicColors('#4357AD', HarmonyStrategy.triadic);
+// ['#4357AD', '#57AD43', '#AD4357']
+
+// Detectar estrategia de una paleta existente
+final result = detectHarmonyStrategy(['#4357AD', '#AD5743']);
+// (strategy: HarmonyStrategy.complementary, confidence: 92)
+```
+
+### Estrategias disponibles
+
+| Estrategia | Ángulos | Descripción |
+|------------|---------|-------------|
+| `analogous` | ±30° | Paletas suaves, coherentes |
+| `complementary` | 180° | Alto contraste visual |
+| `triadic` | 120° | Balance vibrante |
+| `splitComplementary` | 150°, 210° | Complementario menos agresivo |
+| `tetradic` | 90° cada | Paletas complejas |
+| `auto` (default) | — | Prueba todas, devuelve las mejores |
+
+---
+
 ## Caché
 
 Los sistemas se memorizan por paleta. Llamar `createDesignSystem` con la misma paleta retorna el mismo objeto.

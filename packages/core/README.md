@@ -215,6 +215,92 @@ normalizeHex('4357AD')  // '#4357AD'
 
 ---
 
+## Armonía de colores 🎨
+
+Genera paletas completas a partir de uno o más colores "bloqueados" (colores de marca que no deben cambiar).
+
+### `suggestHarmonicPalette()`
+
+```typescript
+import { suggestHarmonicPalette } from '@ds-yoandry/core';
+
+// Con un solo color bloqueado
+const suggestions = suggestHarmonicPalette({
+    locked: { primary: '#4357AD' },
+});
+// suggestions[0] = {
+//     primary: '#4357AD',   // ← bloqueado
+//     secondary: '#...',     // ← generado armónicamente
+//     background: '#...',
+//     warning: '#...',
+//     danger: '#...',
+//     success: '#...',
+//     harmonyScore: 85,      // 0-100, mayor = más armónico
+//     contrastScore: 78,     // 0-100, mayor = mejor accesibilidad
+//     score: 82,             // combinado (60% harmony, 40% contrast)
+//     accessibilityPass: true,
+//     strategy: 'analogous',
+// }
+
+// Con estrategia específica
+const vibrant = suggestHarmonicPalette({
+    locked: { primary: '#4357AD' },
+    strategy: 'triadic',          // analogous, complementary, triadic, split-complementary, tetradic
+    count: 5,                     // default: 3
+    ensureAccessibility: false,   // default: true (filtra las que no pasan WCAG AA)
+    backgroundLightness: 95,      // default: 90
+});
+
+// Con múltiples colores bloqueados
+const brandLocked = suggestHarmonicPalette({
+    locked: {
+        primary: '#4357AD',
+        secondary: '#48A9A6',   // ambos de marca, no tocar
+    },
+});
+```
+
+### Estrategias de armonía
+
+| Estrategia | Ángulos | Cuándo usarla |
+|------------|---------|---------------|
+| `analogous` | ±30° | Paletas suaves (wellness, finanzas) |
+| `complementary` | 180° | Alto contraste (CTAs, gaming) |
+| `triadic` | 120° | Balance vibrante (apps infantiles) |
+| `split-complementary` | 150° + 210° | Complementario menos agresivo |
+| `tetradic` | 90° cada | Paletas complejas (dashboards) |
+| `auto` (default) | — | Prueba todas, devuelve las mejores |
+
+### `getHarmonicColors()`
+
+Versión simple para obtener solo los colores:
+
+```typescript
+import { getHarmonicColors } from '@ds-yoandry/core';
+
+const colors = getHarmonicColors('#4357AD', 'triadic');
+// ['#4357AD', '#57AD43', '#AD4357'] (base + 2 a 120°)
+
+const pair = getHarmonicColors('#FF0000', 'complementary');
+// ['#FF0000', '#00FFFF'] (rojo + cyan)
+```
+
+### `detectHarmonyStrategy()`
+
+Detecta qué estrategia usa una paleta existente:
+
+```typescript
+import { detectHarmonyStrategy } from '@ds-yoandry/core';
+
+const result = detectHarmonyStrategy(['#4357AD', '#AD5743']);
+// { strategy: 'complementary', confidence: 92 }
+
+const result2 = detectHarmonyStrategy(['#FF0000', '#FF5500']);
+// { strategy: 'analogous', confidence: 80 }
+```
+
+---
+
 ## Paleta por defecto
 
 ```typescript
@@ -273,5 +359,5 @@ import type {
 ```bash
 cd packages/core
 pnpm test
-# 83 tests — converters, accessibility, createDesignSystem
+# 125 tests — converters, accessibility, createDesignSystem, harmony
 ```

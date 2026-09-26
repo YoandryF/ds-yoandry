@@ -20,6 +20,7 @@ Dale 5 colores de [Coolors.co](https://coolors.co) y obtienes automáticamente:
 - Colores de texto con contraste **WCAG AA** garantizado
 - Paleta completa para modo claro y oscuro
 - Escalas de opacidad para overlays
+- **🎨 Generador de paletas armónicas** — bloquea tu color de marca y genera el resto
 - Hook `useTheme()` con API plana — sin navegación profunda
 
 ```tsx
@@ -30,6 +31,20 @@ platform.shadow.md
 
 // ✅ Con useTheme()
 const { primary, bg, shadow } = useTheme();
+```
+
+### Armonía de colores (nuevo en v4.3)
+
+```tsx
+import { suggestHarmonicPalette } from '@ds-yoandry/core';
+
+// Tienes tu azul de marca, necesitas el resto
+const suggestions = suggestHarmonicPalette({
+    locked: { primary: '#4357AD' },
+    strategy: 'triadic',  // o 'auto' para la mejor opción
+});
+
+// suggestions[0] = paleta completa armónica con tu color bloqueado
 ```
 
 ---

@@ -31,3 +31,4 @@ export 'src/platform.dart';
 export 'src/palette.dart';
 export 'src/cache.dart';
 export 'src/create_design_system.dart';
+export 'src/harmony.dart';

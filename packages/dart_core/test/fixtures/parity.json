@@ -8459,5 +8459,330 @@
         "out": "#ffffff"
       }
     ]
+  },
+  "harmony": {
+    "suggestHarmonicPalette": [
+      {
+        "in": {
+          "locked": {
+            "primary": "#4357AD"
+          },
+          "ensureAccessibility": false
+        },
+        "out": [
+          {
+            "primary": "#4357AD",
+            "secondary": "#2e5f76",
+            "background": "#e2e3e9",
+            "warning": "#c6a953",
+            "danger": "#ac394d",
+            "success": "#39ac43",
+            "harmonyScore": 99,
+            "contrastScore": 70,
+            "score": 87,
+            "accessibilityPass": true,
+            "strategy": "analogous"
+          },
+          {
+            "primary": "#4357AD",
+            "secondary": "#ad4357",
+            "background": "#e2e3e9",
+            "warning": "#c6a953",
+            "danger": "#ac394d",
+            "success": "#39ac43",
+            "harmonyScore": 100,
+            "contrastScore": 65,
+            "score": 86,
+            "accessibilityPass": true,
+            "strategy": "triadic"
+          },
+          {
+            "primary": "#4357AD",
+            "secondary": "#ad438c",
+            "background": "#e2e3e9",
+            "warning": "#c6a953",
+            "danger": "#ac394d",
+            "success": "#39ac43",
+            "harmonyScore": 100,
+            "contrastScore": 64,
+            "score": 86,
+            "accessibilityPass": true,
+            "strategy": "tetradic"
+          }
+        ]
+      },
+      {
+        "in": {
+          "locked": {
+            "primary": "#48A9A6"
+          },
+          "strategy": "analogous",
+          "ensureAccessibility": false
+        },
+        "out": [
+          {
+            "primary": "#48A9A6",
+            "secondary": "#317350",
+            "background": "#e2e9e8",
+            "warning": "#c6a953",
+            "danger": "#ac5639",
+            "success": "#39ac43",
+            "harmonyScore": 100,
+            "contrastScore": 57,
+            "score": 83,
+            "accessibilityPass": true,
+            "strategy": "analogous"
+          },
+          {
+            "primary": "#48A9A6",
+            "secondary": "#31735e",
+            "background": "#e2e9e8",
+            "warning": "#c6a953",
+            "danger": "#ac5639",
+            "success": "#39ac43",
+            "harmonyScore": 74,
+            "contrastScore": 57,
+            "score": 67,
+            "accessibilityPass": true,
+            "strategy": "analogous"
+          },
+          {
+            "primary": "#48A9A6",
+            "secondary": "#31736a",
+            "background": "#e2e9e8",
+            "warning": "#c6a953",
+            "danger": "#ac5639",
+            "success": "#39ac43",
+            "harmonyScore": 53,
+            "contrastScore": 57,
+            "score": 55,
+            "accessibilityPass": true,
+            "strategy": "analogous"
+          }
+        ]
+      },
+      {
+        "in": {
+          "locked": {
+            "primary": "#FF6B35"
+          },
+          "strategy": "complementary",
+          "ensureAccessibility": false
+        },
+        "out": [
+          {
+            "primary": "#FF6B35",
+            "secondary": "#1a89b2",
+            "background": "#ebe3e0",
+            "warning": "#ddb43c",
+            "danger": "#c34b22",
+            "success": "#22c330",
+            "harmonyScore": 100,
+            "contrastScore": 50,
+            "score": 80,
+            "accessibilityPass": false,
+            "strategy": "complementary"
+          },
+          {
+            "primary": "#FF6B35",
+            "secondary": "#364de2",
+            "background": "#ebe3e0",
+            "warning": "#ddb43c",
+            "danger": "#c34b22",
+            "success": "#22c330",
+            "harmonyScore": 88,
+            "contrastScore": 57,
+            "score": 76,
+            "accessibilityPass": true,
+            "strategy": "complementary"
+          },
+          {
+            "primary": "#FF6B35",
+            "secondary": "#366fe2",
+            "background": "#ebe3e0",
+            "warning": "#ddb43c",
+            "danger": "#c34b22",
+            "success": "#22c330",
+            "harmonyScore": 88,
+            "contrastScore": 51,
+            "score": 73,
+            "accessibilityPass": true,
+            "strategy": "complementary"
+          }
+        ]
+      },
+      {
+        "in": {
+          "locked": {
+            "primary": "#2D6A4F",
+            "secondary": "#40916C"
+          },
+          "ensureAccessibility": false
+        },
+        "out": [
+          {
+            "primary": "#2D6A4F",
+            "secondary": "#40916C",
+            "background": "#e2e9e6",
+            "warning": "#c6a953",
+            "danger": "#ac5639",
+            "success": "#39ac43",
+            "harmonyScore": 42,
+            "contrastScore": 58,
+            "score": 48,
+            "accessibilityPass": true,
+            "strategy": "analogous"
+          }
+        ]
+      },
+      {
+        "in": {
+          "locked": {
+            "background": "#FFFFFF"
+          },
+          "ensureAccessibility": false
+        },
+        "out": [
+          {
+            "primary": "#ac3939",
+            "secondary": "#267326",
+            "background": "#FFFFFF",
+            "warning": "#c6a953",
+            "danger": "#ac394c",
+            "success": "#39ac43",
+            "harmonyScore": 100,
+            "contrastScore": 74,
+            "score": 90,
+            "accessibilityPass": true,
+            "strategy": "triadic"
+          },
+          {
+            "primary": "#ac3939",
+            "secondary": "#ac3973",
+            "background": "#FFFFFF",
+            "warning": "#c6a953",
+            "danger": "#ac394c",
+            "success": "#39ac43",
+            "harmonyScore": 99,
+            "contrastScore": 74,
+            "score": 89,
+            "accessibilityPass": true,
+            "strategy": "analogous"
+          },
+          {
+            "primary": "#ac3939",
+            "secondary": "#267373",
+            "background": "#FFFFFF",
+            "warning": "#c6a953",
+            "danger": "#ac394c",
+            "success": "#39ac43",
+            "harmonyScore": 100,
+            "contrastScore": 73,
+            "score": 89,
+            "accessibilityPass": true,
+            "strategy": "complementary"
+          }
+        ]
+      }
+    ],
+    "getHarmonicColors": [
+      {
+        "in": [
+          "#4357AD",
+          "analogous"
+        ],
+        "out": [
+          "#4357AD",
+          "#438cad",
+          "#6443ad"
+        ]
+      },
+      {
+        "in": [
+          "#4357AD",
+          "complementary"
+        ],
+        "out": [
+          "#4357AD",
+          "#ad9943"
+        ]
+      },
+      {
+        "in": [
+          "#4357AD",
+          "triadic"
+        ],
+        "out": [
+          "#4357AD",
+          "#ad4357",
+          "#57ad43"
+        ]
+      },
+      {
+        "in": [
+          "#4357AD",
+          "split-complementary"
+        ],
+        "out": [
+          "#4357AD",
+          "#ad6443",
+          "#8cad43"
+        ]
+      },
+      {
+        "in": [
+          "#4357AD",
+          "tetradic"
+        ],
+        "out": [
+          "#4357AD",
+          "#ad438c",
+          "#ad9943",
+          "#43ad64"
+        ]
+      }
+    ],
+    "detectHarmonyStrategy": [
+      {
+        "in": [
+          "#FF0000",
+          "#00FFFF"
+        ],
+        "out": {
+          "strategy": "complementary",
+          "confidence": 100
+        }
+      },
+      {
+        "in": [
+          "#FF0000",
+          "#FF5500"
+        ],
+        "out": {
+          "strategy": "analogous",
+          "confidence": 80
+        }
+      },
+      {
+        "in": [
+          "#FF0000",
+          "#00FF00"
+        ],
+        "out": {
+          "strategy": "triadic",
+          "confidence": 100
+        }
+      },
+      {
+        "in": [
+          "#4357AD",
+          "#48A9A6"
+        ],
+        "out": {
+          "strategy": "analogous",
+          "confidence": 59
+        }
+      }
+    ]
   }
 }

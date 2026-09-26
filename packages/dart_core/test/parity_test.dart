@@ -381,4 +381,173 @@ void main() {
       }
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // ARMONÍA
+  // ---------------------------------------------------------------------------
+  group('paridad — harmony', () {
+    final harmony = fixtures['harmony'] as Map<String, dynamic>?;
+
+    // Si no hay fixtures de harmony, skip
+    if (harmony == null) return;
+
+    test('getHarmonicColors', () {
+      for (final e in harmony['getHarmonicColors'] as List) {
+        final i = e['in'] as List;
+        final strategyStr = i[1] as String;
+
+        // Mapear string de estrategia a enum
+        HarmonyStrategy strategy;
+        switch (strategyStr) {
+          case 'analogous':
+            strategy = HarmonyStrategy.analogous;
+            break;
+          case 'complementary':
+            strategy = HarmonyStrategy.complementary;
+            break;
+          case 'triadic':
+            strategy = HarmonyStrategy.triadic;
+            break;
+          case 'split-complementary':
+            strategy = HarmonyStrategy.splitComplementary;
+            break;
+          case 'tetradic':
+            strategy = HarmonyStrategy.tetradic;
+            break;
+          default:
+            throw ArgumentError('Unknown strategy: $strategyStr');
+        }
+
+        final result = getHarmonicColors(i[0] as String, strategy);
+        final expected = (e['out'] as List).cast<String>();
+
+        expect(result.length, expected.length,
+            reason: 'getHarmonicColors length');
+        for (var idx = 0; idx < result.length; idx++) {
+          expect(result[idx], expected[idx],
+              reason: 'getHarmonicColors[$idx]');
+        }
+      }
+    });
+
+    test('detectHarmonyStrategy', () {
+      for (final e in harmony['detectHarmonyStrategy'] as List) {
+        final colors = (e['in'] as List).cast<String>();
+        final expected = e['out'] as Map;
+
+        final result = detectHarmonyStrategy(colors);
+
+        // Mapear string a enum
+        HarmonyStrategy expectedStrategy;
+        final strategyStr = expected['strategy'] as String;
+        switch (strategyStr) {
+          case 'analogous':
+            expectedStrategy = HarmonyStrategy.analogous;
+            break;
+          case 'complementary':
+            expectedStrategy = HarmonyStrategy.complementary;
+            break;
+          case 'triadic':
+            expectedStrategy = HarmonyStrategy.triadic;
+            break;
+          case 'split-complementary':
+            expectedStrategy = HarmonyStrategy.splitComplementary;
+            break;
+          case 'tetradic':
+            expectedStrategy = HarmonyStrategy.tetradic;
+            break;
+          default:
+            throw ArgumentError('Unknown strategy: $strategyStr');
+        }
+
+        expect(result.strategy, expectedStrategy,
+            reason: 'detectHarmonyStrategy strategy for $colors');
+        expect(result.confidence, expected['confidence'],
+            reason: 'detectHarmonyStrategy confidence for $colors');
+      }
+    });
+
+    test('suggestHarmonicPalette', () {
+      for (final e in harmony['suggestHarmonicPalette'] as List) {
+        final input = e['in'] as Map;
+        final lockedMap = input['locked'] as Map;
+        final strategyStr = input['strategy'] as String? ?? 'auto';
+
+        // Construir LockedColors
+        final locked = LockedColors(
+          primary: lockedMap['primary'] as String?,
+          secondary: lockedMap['secondary'] as String?,
+          background: lockedMap['background'] as String?,
+          warning: lockedMap['warning'] as String?,
+          danger: lockedMap['danger'] as String?,
+          success: lockedMap['success'] as String?,
+        );
+
+        // Mapear estrategia
+        HarmonyStrategy strategy;
+        switch (strategyStr) {
+          case 'auto':
+            strategy = HarmonyStrategy.auto;
+            break;
+          case 'analogous':
+            strategy = HarmonyStrategy.analogous;
+            break;
+          case 'complementary':
+            strategy = HarmonyStrategy.complementary;
+            break;
+          case 'triadic':
+            strategy = HarmonyStrategy.triadic;
+            break;
+          case 'split-complementary':
+            strategy = HarmonyStrategy.splitComplementary;
+            break;
+          case 'tetradic':
+            strategy = HarmonyStrategy.tetradic;
+            break;
+          default:
+            throw ArgumentError('Unknown strategy: $strategyStr');
+        }
+
+        final result = suggestHarmonicPalette(
+          locked: locked,
+          strategy: strategy,
+          count: 3,
+          ensureAccessibility: input['ensureAccessibility'] as bool? ?? true,
+        );
+
+        final expectedList = e['out'] as List;
+
+        // Verificar que tenemos la misma cantidad de resultados
+        expect(result.length, expectedList.length,
+            reason: 'suggestHarmonicPalette count for $lockedMap');
+
+        // Verificar cada sugerencia
+        for (var idx = 0; idx < result.length; idx++) {
+          final expected = expectedList[idx] as Map;
+          final actual = result[idx];
+
+          expect(actual.primary, expected['primary'],
+              reason: 'suggestion[$idx].primary');
+          expect(actual.secondary, expected['secondary'],
+              reason: 'suggestion[$idx].secondary');
+          expect(actual.background, expected['background'],
+              reason: 'suggestion[$idx].background');
+          expect(actual.warning, expected['warning'],
+              reason: 'suggestion[$idx].warning');
+          expect(actual.danger, expected['danger'],
+              reason: 'suggestion[$idx].danger');
+          expect(actual.success, expected['success'],
+              reason: 'suggestion[$idx].success');
+          expect(actual.harmonyScore, expected['harmonyScore'],
+              reason: 'suggestion[$idx].harmonyScore');
+          expect(actual.contrastScore, expected['contrastScore'],
+              reason: 'suggestion[$idx].contrastScore');
+          expect(actual.score, expected['score'],
+              reason: 'suggestion[$idx].score');
+          expect(actual.accessibilityPass, expected['accessibilityPass'],
+              reason: 'suggestion[$idx].accessibilityPass');
+        }
+      }
+    });
+  });
 }

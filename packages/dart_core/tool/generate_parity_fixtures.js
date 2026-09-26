@@ -29,6 +29,7 @@ const {
     generateGrayScale, generateColorVariants, generateAlphaScale, generateSuccessColor,
     isValidHex, normalizeHex,
     DEFAULT_PALETTE,
+    suggestHarmonicPalette, getHarmonicColors, detectHarmonyStrategy,
 } = core;
 
 // Paletas de prueba (incluye las predefinidas del paquete Flutter + casos borde).
@@ -106,6 +107,11 @@ const fixtures = {
     },
     generators: { generateGrayScale: [], generateColorVariants: [], generateAlphaScale: [], generateSuccessColor: [] },
     validators: { isValidHex: [], normalizeHex: [] },
+    harmony: {
+        suggestHarmonicPalette: [],
+        getHarmonicColors: [],
+        detectHarmonyStrategy: [],
+    },
 };
 
 // --- Sistemas completos ---
@@ -169,6 +175,67 @@ for (const v of ['#4357AD', '4357AD', '#435', 'invalid', '', '#GGGGGG']) {
 }
 for (const v of ['4357AD', '#4357AD', 'ffffff']) {
     fixtures.validators.normalizeHex.push({ in: v, out: normalizeHex(v) });
+}
+
+// --- Harmony ---
+const HARMONY_STRATEGIES = ['analogous', 'complementary', 'triadic', 'split-complementary', 'tetradic'];
+
+// suggestHarmonicPalette con diferentes configuraciones
+const harmonySuggestionCases = [
+    { locked: { primary: '#4357AD' }, ensureAccessibility: false },
+    { locked: { primary: '#48A9A6' }, strategy: 'analogous', ensureAccessibility: false },
+    { locked: { primary: '#FF6B35' }, strategy: 'complementary', ensureAccessibility: false },
+    { locked: { primary: '#2D6A4F', secondary: '#40916C' }, ensureAccessibility: false },
+    { locked: { background: '#FFFFFF' }, ensureAccessibility: false },
+];
+
+for (const testCase of harmonySuggestionCases) {
+    const result = suggestHarmonicPalette({
+        locked: testCase.locked,
+        strategy: testCase.strategy || 'auto',
+        count: 3,
+        ensureAccessibility: testCase.ensureAccessibility ?? true,
+    });
+    fixtures.harmony.suggestHarmonicPalette.push({
+        in: testCase,
+        out: result.map(s => ({
+            primary: s.primary,
+            secondary: s.secondary,
+            background: s.background,
+            warning: s.warning,
+            danger: s.danger,
+            success: s.success,
+            harmonyScore: s.harmonyScore,
+            contrastScore: s.contrastScore,
+            score: s.score,
+            accessibilityPass: s.accessibilityPass,
+            strategy: s.strategy,
+        })),
+    });
+}
+
+// getHarmonicColors
+for (const strategy of HARMONY_STRATEGIES) {
+    fixtures.harmony.getHarmonicColors.push({
+        in: ['#4357AD', strategy],
+        out: getHarmonicColors('#4357AD', strategy),
+    });
+}
+
+// detectHarmonyStrategy
+const detectCases = [
+    ['#FF0000', '#00FFFF'],  // complementary
+    ['#FF0000', '#FF5500'],  // analogous
+    ['#FF0000', '#00FF00'],  // triadic
+    ['#4357AD', '#48A9A6'],  // mixto
+];
+
+for (const colors of detectCases) {
+    const result = detectHarmonyStrategy(colors);
+    fixtures.harmony.detectHarmonyStrategy.push({
+        in: colors,
+        out: { strategy: result.strategy, confidence: result.confidence },
+    });
 }
 
 const outDir = path.join(__dirname, '..', 'test', 'fixtures');
