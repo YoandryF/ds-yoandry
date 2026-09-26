@@ -13,8 +13,6 @@
 npm install @ds-yoandry/core
 # o
 pnpm add @ds-yoandry/core
-# o
-yarn add @ds-yoandry/core
 ```
 
 ---
@@ -25,13 +23,20 @@ yarn add @ds-yoandry/core
 import { createDesignSystem } from '@ds-yoandry/core';
 
 const system = createDesignSystem({
-    primary:    '#4357AD',
-    secondary:  '#48A9A6',
-    background: '#E4DFDA',
-    warning:    '#D4B483',
-    danger:     '#C1666B',
-    // success es opcional — se genera automáticamente
+  primary:    '#4357AD',
+  secondary:  '#48A9A6',
+  background: '#E4DFDA',
+  warning:    '#D4B483',
+  danger:     '#C1666B',
+  // success es opcional — se genera como #22C55E si no se provee
 });
+
+// Usar los colores generados
+system.colors.variants.primary.main      // '#4357AD'
+system.colors.variants.primary.light     // para hover
+system.colors.text.onPrimary             // '#FFFFFF' (WCAG AA)
+system.colors.gray[500]                  // gris medio
+system.colors.dark.background            // fondo modo oscuro
 ```
 
 ---
@@ -42,7 +47,7 @@ const system = createDesignSystem({
 
 | Parámetro | Tipo | Requerido | Descripción |
 |-----------|------|-----------|-------------|
-| `palette` | `BrandPalette` | ✅ | Paleta de 5-6 colores |
+| `palette` | `BrandPalette` | ✅ | Paleta de 5-6 colores hex |
 | `options.skipCache` | `boolean` | — | Forzar regeneración sin caché |
 
 ### Retorno — `DesignSystem`
@@ -68,9 +73,9 @@ system.platform.feedback     // Ripple/highlight por plataforma
 Para cada color de la paleta (primary, secondary, danger, warning, success):
 
 ```typescript
-system.colors.variants.primary.light     // 15% más claro — hover
+system.colors.variants.primary.light     // +15% luminosidad — hover
 system.colors.variants.primary.main      // Color original — normal
-system.colors.variants.primary.dark      // 12% más oscuro — pressed
+system.colors.variants.primary.dark      // -12% luminosidad — pressed
 system.colors.variants.primary.disabled  // Mezclado con bg — disabled
 ```
 
@@ -144,6 +149,103 @@ system.colors.alpha.primary[10]  // 'rgba(67, 87, 173, 0.1)'
 
 ---
 
+## 🎨 Armonía de colores
+
+Genera paletas completas a partir de uno o más colores "bloqueados" (colores de marca que no deben cambiar). Nuevo en v4.4.0.
+
+### `suggestHarmonicPalette()`
+
+```typescript
+import { suggestHarmonicPalette } from '@ds-yoandry/core';
+
+// Caso básico: tienes tu color de marca, necesitas el resto
+const suggestions = suggestHarmonicPalette({
+  locked: { primary: '#4357AD' },
+});
+
+// suggestions[0] = {
+//   primary: '#4357AD',        // ← bloqueado
+//   secondary: '#AD9143',      // ← generado armónicamente
+//   background: '#E8E6F0',     // ← generado
+//   warning: '#B38B4D',
+//   danger: '#B34D5A',
+//   success: '#4DAD57',
+//   score: 85,                 // puntuación combinada
+//   harmonyScore: 88,          // qué tan armónica es
+//   contrastScore: 80,         // qué tan accesible
+//   accessibilityPass: true,   // ✓ pasa WCAG AA
+//   strategy: 'analogous',
+// }
+
+// Usa la sugerencia directamente con createDesignSystem
+const system = createDesignSystem(suggestions[0]);
+```
+
+### Opciones de configuración
+
+```typescript
+const suggestions = suggestHarmonicPalette({
+  // Colores que ya tienes y no quieres cambiar
+  locked: {
+    primary: '#4357AD',
+    secondary: '#48A9A6',  // puedes bloquear múltiples
+  },
+  
+  // Estrategia de armonía (default: 'auto')
+  strategy: 'triadic',
+  
+  // Cuántas sugerencias devolver (default: 3)
+  count: 5,
+  
+  // Filtrar las que no pasan WCAG AA (default: true)
+  ensureAccessibility: true,
+  
+  // Luminosidad del background generado (default: 90)
+  backgroundLightness: 95,
+});
+```
+
+### Estrategias de armonía
+
+| Estrategia | Ángulos | Cuándo usarla |
+|------------|---------|---------------|
+| `analogous` | ±30° | Paletas suaves y cohesivas (wellness, finanzas) |
+| `complementary` | 180° | Alto contraste visual (CTAs, gaming) |
+| `triadic` | 120° | Balance vibrante (apps infantiles, creativos) |
+| `split-complementary` | 150° + 210° | Complementario menos agresivo |
+| `tetradic` | 90° | Paletas complejas con 4 colores (dashboards) |
+| `auto` | — | Prueba todas y devuelve las mejores (default) |
+
+### `getHarmonicColors()`
+
+Versión simple para obtener solo los colores de una estrategia:
+
+```typescript
+import { getHarmonicColors } from '@ds-yoandry/core';
+
+const colors = getHarmonicColors('#4357AD', 'triadic');
+// ['#4357AD', '#57AD43', '#AD4357']
+
+const pair = getHarmonicColors('#FF0000', 'complementary');
+// ['#FF0000', '#00FFFF'] (rojo + cyan)
+```
+
+### `detectHarmonyStrategy()`
+
+Detecta qué estrategia de armonía usa una paleta existente:
+
+```typescript
+import { detectHarmonyStrategy } from '@ds-yoandry/core';
+
+const result = detectHarmonyStrategy(['#4357AD', '#AD5743']);
+// { strategy: 'complementary', confidence: 92 }
+
+const result2 = detectHarmonyStrategy(['#FF0000', '#FF5500', '#FFAA00']);
+// { strategy: 'analogous', confidence: 85 }
+```
+
+---
+
 ## Utilidades de color
 
 ### Conversiones
@@ -161,34 +263,38 @@ hslToRgb(228, 44, 47)         // { r: 67, g: 87, b: 172 }
 ### Manipulación
 
 ```typescript
-import { lighten, darken, saturate, desaturate, mix, complement, invert } from '@ds-yoandry/core';
+import { 
+  lighten, darken, saturate, desaturate, 
+  mix, complement, invert, adjustHue 
+} from '@ds-yoandry/core';
 
-lighten('#4357AD', 20)              // Más claro
-darken('#4357AD', 15)               // Más oscuro
-saturate('#4357AD', 20)             // Más vibrante
-desaturate('#4357AD', 30)           // Más apagado
+lighten('#4357AD', 20)              // 20% más claro
+darken('#4357AD', 15)               // 15% más oscuro
+saturate('#4357AD', 20)             // 20% más vibrante
+desaturate('#4357AD', 30)           // 30% más apagado
 mix('#4357AD', '#FFFFFF', 0.3)      // 70% azul, 30% blanco
-complement('#4357AD')               // Color opuesto en la rueda
+complement('#4357AD')               // Color opuesto (180°)
 invert('#4357AD')                   // '#bca852'
+adjustHue('#4357AD', 60)            // Rotar 60° en la rueda de color
 ```
 
 ### Accesibilidad WCAG 2.1
 
 ```typescript
 import {
-    getContrastRatio,
-    meetsContrastAA,
-    meetsContrastAAA,
-    getContrastColor,
-    ensureContrast,
-    findBestContrast,
+  getContrastRatio,
+  meetsContrastAA,
+  meetsContrastAAA,
+  getContrastColor,
+  ensureContrast,
+  findBestContrast,
 } from '@ds-yoandry/core';
 
 getContrastRatio('#4357AD', '#FFFFFF')        // ~5.5
 meetsContrastAA('#4357AD', '#FFFFFF')         // true  (>= 4.5)
 meetsContrastAAA('#4357AD', '#FFFFFF')        // false (< 7)
-getContrastColor('#4357AD')                   // '#FFFFFF'
-ensureContrast('#888888', '#FFFFFF')          // Gris ajustado para cumplir 4.5:1
+getContrastColor('#4357AD')                   // '#FFFFFF' (auto)
+ensureContrast('#888888', '#FFFFFF')          // Gris ajustado para 4.5:1
 findBestContrast('#4357AD', ['#FFF', '#000']) // { color: '#FFF', ratio: 5.5 }
 ```
 
@@ -208,95 +314,9 @@ generateAlphaScale('#000000')                   // { 5: 'rgba(...)', ..., 90: 'r
 import { isValidHex, normalizeHex } from '@ds-yoandry/core';
 
 isValidHex('#4357AD')   // true
-isValidHex('4357AD')    // true
+isValidHex('4357AD')    // true (acepta sin #)
 isValidHex('#GGG')      // false
 normalizeHex('4357AD')  // '#4357AD'
-```
-
----
-
-## Armonía de colores 🎨
-
-Genera paletas completas a partir de uno o más colores "bloqueados" (colores de marca que no deben cambiar).
-
-### `suggestHarmonicPalette()`
-
-```typescript
-import { suggestHarmonicPalette } from '@ds-yoandry/core';
-
-// Con un solo color bloqueado
-const suggestions = suggestHarmonicPalette({
-    locked: { primary: '#4357AD' },
-});
-// suggestions[0] = {
-//     primary: '#4357AD',   // ← bloqueado
-//     secondary: '#...',     // ← generado armónicamente
-//     background: '#...',
-//     warning: '#...',
-//     danger: '#...',
-//     success: '#...',
-//     harmonyScore: 85,      // 0-100, mayor = más armónico
-//     contrastScore: 78,     // 0-100, mayor = mejor accesibilidad
-//     score: 82,             // combinado (60% harmony, 40% contrast)
-//     accessibilityPass: true,
-//     strategy: 'analogous',
-// }
-
-// Con estrategia específica
-const vibrant = suggestHarmonicPalette({
-    locked: { primary: '#4357AD' },
-    strategy: 'triadic',          // analogous, complementary, triadic, split-complementary, tetradic
-    count: 5,                     // default: 3
-    ensureAccessibility: false,   // default: true (filtra las que no pasan WCAG AA)
-    backgroundLightness: 95,      // default: 90
-});
-
-// Con múltiples colores bloqueados
-const brandLocked = suggestHarmonicPalette({
-    locked: {
-        primary: '#4357AD',
-        secondary: '#48A9A6',   // ambos de marca, no tocar
-    },
-});
-```
-
-### Estrategias de armonía
-
-| Estrategia | Ángulos | Cuándo usarla |
-|------------|---------|---------------|
-| `analogous` | ±30° | Paletas suaves (wellness, finanzas) |
-| `complementary` | 180° | Alto contraste (CTAs, gaming) |
-| `triadic` | 120° | Balance vibrante (apps infantiles) |
-| `split-complementary` | 150° + 210° | Complementario menos agresivo |
-| `tetradic` | 90° cada | Paletas complejas (dashboards) |
-| `auto` (default) | — | Prueba todas, devuelve las mejores |
-
-### `getHarmonicColors()`
-
-Versión simple para obtener solo los colores:
-
-```typescript
-import { getHarmonicColors } from '@ds-yoandry/core';
-
-const colors = getHarmonicColors('#4357AD', 'triadic');
-// ['#4357AD', '#57AD43', '#AD4357'] (base + 2 a 120°)
-
-const pair = getHarmonicColors('#FF0000', 'complementary');
-// ['#FF0000', '#00FFFF'] (rojo + cyan)
-```
-
-### `detectHarmonyStrategy()`
-
-Detecta qué estrategia usa una paleta existente:
-
-```typescript
-import { detectHarmonyStrategy } from '@ds-yoandry/core';
-
-const result = detectHarmonyStrategy(['#4357AD', '#AD5743']);
-// { strategy: 'complementary', confidence: 92 }
-
-const result2 = detectHarmonyStrategy(['#FF0000', '#FF5500']);
-// { strategy: 'analogous', confidence: 80 }
 ```
 
 ---
@@ -307,17 +327,18 @@ const result2 = detectHarmonyStrategy(['#FF0000', '#FF5500']);
 import { DEFAULT_PALETTE } from '@ds-yoandry/core';
 
 // {
-//     primary:    '#4357AD'  — Ocean Twilight
-//     secondary:  '#48A9A6'  — Tropical Teal
-//     background: '#E4DFDA'  — Dust Grey
-//     warning:    '#D4B483'  — Soft Fawn
-//     danger:     '#C1666B'  — Lobster Pink
-//     success:    '#22C55E'  — Emerald
+//   primary:    '#4357AD'  — Ocean Twilight
+//   secondary:  '#48A9A6'  — Tropical Teal
+//   background: '#E4DFDA'  — Dust Grey
+//   warning:    '#D4B483'  — Soft Fawn
+//   danger:     '#C1666B'  — Lobster Pink
+//   success:    '#22C55E'  — Emerald
 // }
 
+// Úsala como base y modifica lo que necesites
 const system = createDesignSystem({
-    ...DEFAULT_PALETTE,
-    primary: '#FF6B35',  // Solo cambia lo que necesites
+  ...DEFAULT_PALETTE,
+  primary: '#FF6B35',  // tu color de marca
 });
 ```
 
@@ -330,7 +351,7 @@ Los sistemas de diseño se memorizan automáticamente por paleta. Llamar `create
 ```typescript
 import { getCacheStats, clearDesignSystemCache } from '@ds-yoandry/core';
 
-getCacheStats()           // { size: 2, keys: ['...', '...'] }
+getCacheStats()           // { size: 2, keys: ['#4357AD|...', '...'] }
 clearDesignSystemCache()  // Limpia toda la caché
 ```
 
@@ -338,17 +359,22 @@ clearDesignSystemCache()  // Limpia toda la caché
 
 ## TypeScript
 
-Todos los tipos están incluidos sin instalación adicional:
+Todos los tipos están incluidos:
 
 ```typescript
 import type {
-    BrandPalette,
-    DesignSystem,
-    ColorVariants,
-    GrayScale,
-    TextColors,
-    SurfaceColors,
-    PlatformShadows,
+  BrandPalette,
+  DesignSystem,
+  ColorVariants,
+  GrayScale,
+  TextColors,
+  SurfaceColors,
+  DarkModeColors,
+  PlatformShadows,
+  // Harmony
+  HarmonyStrategy,
+  LockedColors,
+  HarmonicSuggestion,
 } from '@ds-yoandry/core';
 ```
 
@@ -359,5 +385,20 @@ import type {
 ```bash
 cd packages/core
 pnpm test
-# 125 tests — converters, accessibility, createDesignSystem, harmony
+
+# 125 tests:
+# - converters (26)
+# - manipulators (15)
+# - accessibility (18)
+# - generators (12)
+# - createDesignSystem (12)
+# - harmony (42)
 ```
+
+---
+
+## Ver también
+
+- **[@ds-yoandry/react](../react/README.md)** — ThemeProvider + useTheme() para React/RN
+- **[@ds-yoandry/angular](../angular/README.md)** — Signals + Directive para Angular
+- **[ds_yoandry_core](../dart_core/README.md)** — Port idéntico en Dart puro

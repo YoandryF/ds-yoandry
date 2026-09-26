@@ -7,54 +7,130 @@ Versiones siguiendo [Semantic Versioning](https://semver.org/lang/es/).
 
 ---
 
-## [4.4.0] — 2026-09-25
+## [4.4.1] — 2025-01-XX
 
-### 🎯 Soporte para Flutter / Dart
+### 🚀 Optimizaciones de Developer Experience
 
-Se añaden dos paquetes que llevan el Design System al ecosistema Dart,
-manteniendo **paridad exacta** con el motor JS de producción.
+Mejoras internas de tooling que no afectan la API pública.
+
+### Cambiado
+
+#### Performance de tests
+- **Tests 3-5× más rápidos**: Migración de `ts-jest` a `@swc/jest` en el core.
+  Tests que tardaban ~5s ahora corren en ~1.2s.
+
+#### Watch mode optimizado
+- **Rebuilds 2× más rápidos**: `tsup.config.ts` ahora usa `dts: !options.watch`,
+  omitiendo la generación de `.d.ts` durante desarrollo (se generan en build final).
+
+#### Turborepo optimizado
+- Eliminada dependencia `test → build` innecesaria.
+- Inputs granulares por tarea para mejor cache hit rate.
 
 ### Agregado
 
-#### `ds_yoandry_core` (Dart puro)
-- Port 1:1 del motor de `@ds-yoandry/core` a Dart, **sin dependencia de Flutter**
-- Usable en Flutter, backends Dart (Shelf / Dart Frog / Serverpod), CLIs, etc.
-- `createDesignSystem(palette, {skipCache})` y `DEFAULT_PALETTE` (`kDefaultPalette`)
-- Todas las utilidades: conversores, manipuladores, accesibilidad, generadores,
-  validadores, caché
-- **Test de paridad** (`test/parity_test.dart`) que compara las salidas contra
-  fixtures generados desde el build de producción del core JS
-  (`tool/generate_parity_fixtures.js`) — cero divergencias
-- 108 tests (unitarios + paridad)
+#### Script de paridad
+- Nuevo script `pnpm parity` que ejecuta los 3 pasos de verificación
+  JS↔Dart en un solo comando:
+  1. Build del core JS
+  2. Genera fixtures
+  3. Corre tests de Dart
 
-#### `ds_yoandry_flutter`
-- Capa de theming idiomática construida sobre `ds_yoandry_core`
-- `DsThemeProvider` (InheritedNotifier) + `DsTheme.of(context)` — equivalente a
-  `ThemeProvider` / `useTheme()` de React
-- `DsThemeController` (ChangeNotifier) con modo claro/oscuro/sistema
-- `DsThemeData` con API plana que expone `Color` nativos ya resueltos por modo,
-  `List<BoxShadow>` para sombras y `toMaterialTheme()` para integrar con Material
-- Persistencia con `shared_preferences` (equivalente a AsyncStorage)
-- 4 paletas predefinidas + `DsPaletteSelector`
-- Re-exporta todo `ds_yoandry_core`
+#### CI/CD
+- GitHub Actions workflow (`.github/workflows/ci.yml`):
+  - Job 1: Tests JS (pnpm test)
+  - Job 2: Tests Dart + verificación de paridad
 
-### Notas
-- Se omitieron `supportsColorMix` / `mixWithNative` del core (son específicos de
-  CSS del navegador y no aplican a Dart/Flutter).
+#### Pre-commit hooks
+- Husky + lint-staged para validar código antes de commits.
+- Requiere Git >= 2.32 para `core.hooksPath`.
 
 ---
 
-## [4.2.0] — 2026-09-06
+## [4.4.0] — 2025-01-XX
+
+### 🎨 Generador de paletas armónicas
+
+Nueva funcionalidad para generar paletas de colores armónicas a partir de
+colores "bloqueados" (colores de marca que no deben cambiar).
+
+### Agregado
+
+#### `@ds-yoandry/core` / `ds_yoandry_core`
+
+- **`suggestHarmonicPalette()`**: Función principal que genera paletas completas.
+  ```typescript
+  const suggestions = suggestHarmonicPalette({
+    locked: { primary: '#4357AD' },
+    strategy: 'triadic',  // o 'auto'
+    count: 3,
+    ensureAccessibility: true,
+  });
+  // → Array de BrandPalette con scores de armonía
+  ```
+
+- **5 estrategias de armonía**:
+  - `analogous` — colores adyacentes (±30°)
+  - `complementary` — opuestos (180°)
+  - `triadic` — tres equidistantes (120°)
+  - `split-complementary` — 150° + 210°
+  - `tetradic` — cuatro en cuadrado (90°)
+  - `auto` — prueba todas y devuelve las mejores
+
+- **`getHarmonicColors()`**: Versión simple que devuelve solo los colores hex.
+  ```typescript
+  getHarmonicColors('#FF0000', 'triadic');
+  // → ['#FF0000', '#00FF00', '#0000FF']
+  ```
+
+- **`detectHarmonyStrategy()`**: Detecta qué estrategia usa una paleta existente.
+  ```typescript
+  detectHarmonyStrategy(['#4357AD', '#AD5743']);
+  // → { strategy: 'complementary', confidence: 92 }
+  ```
+
+- **Sistema de scoring**:
+  - 60% armonía (distancia angular a la estrategia ideal)
+  - 40% contraste (score de accesibilidad WCAG)
+  - Filtro opcional de paletas que no pasan WCAG AA
+
+- **Tipos exportados**:
+  - `HarmonyStrategy` — union type de estrategias
+  - `LockedColors` — colores bloqueados (partial de BrandPalette)
+  - `HarmonicSuggestion` — paleta sugerida con scores
+
+#### Port a Dart (`ds_yoandry_core`)
+- Port completo 1:1 del módulo de armonía.
+- 42 nuevos tests de armonía (125 total en JS, 74 en Dart).
+- Tests de paridad actualizados para incluir harmony.
+
+### Tests
+- **125 tests** en `@ds-yoandry/core` (42 nuevos de harmony)
+- **74 tests** en `ds_yoandry_core` (37 de paridad)
+
+---
+
+## [4.3.0] — 2025-01-XX _(versión de desarrollo, no publicada)_
+
+### Agregado
+- Estructura inicial del módulo de armonía (refactorizado en 4.4.0).
+
+---
+
+## [4.2.0] — 2025-01-XX
 
 ### 🎉 Primera versión pública del monorepo
 
-Esta versión transforma el sistema de diseño de un módulo local a una librería NPM con arquitectura monorepo.
+Esta versión transforma el sistema de diseño de un módulo local a una librería
+NPM/pub.dev con arquitectura monorepo.
 
 ### Packages publicados
 
-- **`@ds-yoandry/core`** — Motor agnóstico de framework
-- **`@ds-yoandry/react`** — Hook + Provider para React / React Native
-- **`@ds-yoandry/angular`** — Service + Signals para Angular 20+
+- **`@ds-yoandry/core`** v4.2.0 — Motor agnóstico de framework (JS/TS)
+- **`@ds-yoandry/react`** v4.2.0 — Hook + Provider para React / React Native
+- **`@ds-yoandry/angular`** v4.2.0 — Service + Signals para Angular 20+
+- **`ds_yoandry_core`** v4.2.0 — Motor agnóstico en Dart puro
+- **`ds_yoandry_flutter`** v4.2.0 — Theming + Provider para Flutter
 
 ### Agregado
 
@@ -95,6 +171,24 @@ Esta versión transforma el sistema de diseño de un módulo local a una librer�
 - Compatible con SSR via `isPlatformBrowser`
 - Re-exporta todo `@ds-yoandry/core`
 
+#### `ds_yoandry_core` (Dart puro)
+- Port 1:1 del motor de `@ds-yoandry/core` a Dart, **sin dependencia de Flutter**
+- Usable en Flutter, backends Dart (Shelf / Dart Frog / Serverpod), CLIs, etc.
+- `createDesignSystem(palette, {skipCache})` y `DEFAULT_PALETTE` (`kDefaultPalette`)
+- Todas las utilidades: conversores, manipuladores, accesibilidad, generadores,
+  validadores, caché
+- **Test de paridad** que compara salidas contra fixtures del core JS — cero divergencias
+
+#### `ds_yoandry_flutter`
+- Capa de theming idiomática construida sobre `ds_yoandry_core`
+- `DsThemeProvider` (InheritedNotifier) + `DsTheme.of(context)`
+- `DsThemeController` (ChangeNotifier) con modo claro/oscuro/sistema
+- `DsThemeData` con API plana que expone `Color` nativos ya resueltos por modo,
+  `List<BoxShadow>` para sombras y `toMaterialTheme()` para integrar con Material
+- Persistencia con `shared_preferences`
+- 4 paletas predefinidas + `DsPaletteSelector`
+- Re-exporta todo `ds_yoandry_core`
+
 ### Infraestructura
 - Monorepo con pnpm workspaces + Turborepo
 - Build con tsup (CJS + ESM + tipos)
@@ -102,7 +196,7 @@ Esta versión transforma el sistema de diseño de un módulo local a una librer�
 
 ---
 
-## [4.1.0] — 2026-09-06 _(versión local, no publicada)_
+## [4.1.0] — 2025-01-XX _(versión local, no publicada)_
 
 ### Agregado
 - Migración de archivos `.js` a TypeScript nativo
@@ -113,7 +207,7 @@ Esta versión transforma el sistema de diseño de un módulo local a una librer�
 
 ---
 
-## [4.0.0] — 2026-09-06 _(versión local, no publicada)_
+## [4.0.0] — 2025-01-XX _(versión local, no publicada)_
 
 ### Agregado
 - Sistema de diseño completo como módulo local
@@ -123,5 +217,6 @@ Esta versión transforma el sistema de diseño de un módulo local a una librer�
 
 ---
 
+[4.4.1]: https://github.com/YoandryF/ds-yoandry/releases/tag/v4.4.1
 [4.4.0]: https://github.com/YoandryF/ds-yoandry/releases/tag/v4.4.0
 [4.2.0]: https://github.com/YoandryF/ds-yoandry/releases/tag/v4.2.0

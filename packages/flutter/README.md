@@ -2,6 +2,9 @@
 
 > Design System para Flutter — genera colores, escalas, variantes y accesibilidad **WCAG AA** a partir de una paleta de 5-6 colores.
 
+[![pub.dev](https://img.shields.io/pub/v/ds_yoandry_flutter?color=4357AD)](https://pub.dev/packages/ds_yoandry_flutter)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
+
 Capa de theming idiomática de Flutter (Provider + persistencia + modo claro/oscuro + paletas conmutables en runtime) construida sobre [`ds_yoandry_core`](../dart_core/README.md), el motor de colores en **Dart puro**.
 
 Este paquete **re-exporta todo el core**, así que con un solo import tienes el motor + los widgets de Flutter.
@@ -12,11 +15,12 @@ Este paquete **re-exporta todo el core**, así que con un solo import tienes el 
 
 ## Instalación
 
-Elige según cómo distribuyas los paquetes:
-
-### Opción A — desde Git (recomendado si aún no publicas)
-
 ```yaml
+# pubspec.yaml
+dependencies:
+  ds_yoandry_flutter: ^4.4.0
+
+# o desde Git
 dependencies:
   ds_yoandry_flutter:
     git:
@@ -24,36 +28,9 @@ dependencies:
       path: packages/flutter
 ```
 
-### Opción B — path local (app dentro o junto al monorepo)
+Trae consigo `ds_yoandry_core` y depende de [`shared_preferences`](https://pub.dev/packages/shared_preferences) para persistir el tema.
 
-```yaml
-dependencies:
-  ds_yoandry_flutter:
-    path: ../ruta/a/packages/flutter
-```
-
-### Opción C — pub.dev (si publicas los paquetes)
-
-```yaml
-dependencies:
-  ds_yoandry_flutter: ^4.4.0
-```
-
-> **Nota para publicar en pub.dev**: dentro del monorepo, `ds_yoandry_flutter`
-> depende de `ds_yoandry_core` con `path:`. Para publicar debes cambiar esa
-> dependencia por una versión (`ds_yoandry_core: ^4.4.0`) y publicar primero
-> `ds_yoandry_core`.
-
-Trae consigo `ds_yoandry_core` (el motor) y depende de
-[`shared_preferences`](https://pub.dev/packages/shared_preferences) para
-persistir el tema.
-
-### Requisitos
-
-- Dart SDK >= 3.0 · Flutter >= 3.10
-- `shared_preferences` funciona out-of-the-box en Android, iOS, macOS, Linux,
-  Windows y Web. Si no quieres persistencia, usa `DsThemeProvider(persist: false)`
-  y no arrastra ningún estado nativo.
+**Requisitos:** Dart SDK >= 3.0, Flutter >= 3.10
 
 ---
 
@@ -199,9 +176,58 @@ DsThemeProvider(
 
 ---
 
+## 🎨 Armonía de colores
+
+Genera paletas armónicas desde un color de marca:
+
+```dart
+import 'package:ds_yoandry_flutter/ds_yoandry_flutter.dart';
+
+// Generar paleta armónica desde tu color de marca
+final suggestions = suggestHarmonicPalette(
+  locked: LockedColors(primary: '#FF6B35'),
+  strategy: HarmonyStrategy.triadic,
+);
+
+// Usar la sugerencia como paleta
+DsThemeProvider(
+  palette: suggestions[0].toBrandPalette(),
+  child: const MyApp(),
+)
+```
+
+### API completa de armonía
+
+```dart
+// Diferentes estrategias
+final analogous = suggestHarmonicPalette(
+  locked: LockedColors(primary: '#4357AD'),
+  strategy: HarmonyStrategy.analogous,  // colores cercanos
+);
+
+final vibrant = suggestHarmonicPalette(
+  locked: LockedColors(primary: '#4357AD'),
+  strategy: HarmonyStrategy.triadic,    // 3 colores equidistantes
+  count: 5,                             // más sugerencias
+  ensureAccessibility: false,           // incluir las que no pasan WCAG AA
+);
+
+// Colores armónicos simples
+final colors = getHarmonicColors('#4357AD', HarmonyStrategy.complementary);
+// ['#4357AD', '#AD9143']
+
+// Detectar estrategia de paleta existente
+final result = detectHarmonyStrategy(['#4357AD', '#AD5743']);
+// (strategy: HarmonyStrategy.complementary, confidence: 92)
+```
+
+Ver [ds_yoandry_core](../dart_core/README.md) para documentación completa de armonía.
+
+---
+
 ## Solo el core (sin widgets)
 
-El motor vive en el paquete separado [`ds_yoandry_core`](../dart_core/README.md) (Dart puro, sin Flutter) y se re-exporta desde aquí. Trabaja con colores en **hex string**, idéntico al paquete original:
+El motor vive en [`ds_yoandry_core`](../dart_core/README.md) (Dart puro) y se re-exporta desde aquí:
 
 ```dart
 import 'package:ds_yoandry_flutter/ds_yoandry_flutter.dart';
@@ -248,7 +274,7 @@ final color = hexToColor(system.colors.primary.toString());
 
 ## Diferencias con la versión React
 
-| Concepto | React (`@yoandryf/react`) | Flutter (`ds_yoandry_flutter`) |
+| Concepto | React (`@ds-yoandry/react`) | Flutter (`ds_yoandry_flutter`) |
 |----------|---------------------------|-------------------------------|
 | Provider | `<ThemeProvider>` | `DsThemeProvider` |
 | Acceso | `useTheme()` hook | `DsTheme.of(context)` |
@@ -257,9 +283,16 @@ final color = hexToColor(system.colors.primary.toString());
 | Detección sistema | `useColorScheme()` | `WidgetsBinding.platformDispatcher` |
 | Colores | strings hex/rgba | `Color` nativos (resueltos por modo) |
 | Sombras | estilos RN | `List<BoxShadow>` |
-| `color-mix` CSS | `mixWithNative` | *omitido (no aplica)* |
 
-El **core** (conversores, manipuladores, accesibilidad, generadores, `createDesignSystem`) es una réplica funcional 1:1 y produce los mismos valores hex.
+El **core** (conversores, manipuladores, accesibilidad, generadores, armonía, `createDesignSystem`) es una réplica funcional 1:1 y produce los mismos valores hex.
+
+---
+
+## Ver también
+
+- **[ds_yoandry_core](../dart_core/README.md)** — Motor Dart puro (sin Flutter)
+- **[@ds-yoandry/core](../core/README.md)** — Motor original JS/TS
+- **[@ds-yoandry/react](../react/README.md)** — Versión React/RN
 
 ---
 

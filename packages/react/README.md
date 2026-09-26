@@ -18,7 +18,7 @@ pnpm add @ds-yoandry/react @react-native-async-storage/async-storage
 
 ---
 
-## Setup
+## Inicio rápido
 
 ### 1. Envolver la app con `ThemeProvider`
 
@@ -28,11 +28,11 @@ import { ThemeProvider } from '@ds-yoandry/react';
 import { Stack } from 'expo-router';
 
 export default function RootLayout() {
-    return (
-        <ThemeProvider defaultTheme="system">
-            <Stack />
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider defaultTheme="system">
+      <Stack />
+    </ThemeProvider>
+  );
 }
 ```
 
@@ -41,11 +41,11 @@ export default function RootLayout() {
 import { ThemeProvider } from '@ds-yoandry/react';
 
 export default function App() {
-    return (
-        <ThemeProvider defaultTheme="system">
-            <YourApp />
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider defaultTheme="system">
+      <YourApp />
+    </ThemeProvider>
+  );
 }
 ```
 
@@ -55,21 +55,21 @@ export default function App() {
 import { useTheme } from '@ds-yoandry/react';
 
 function MyComponent() {
-    const { bg, text, primary, shadow, isDark, toggleTheme } = useTheme();
+  const { bg, text, primary, onPrimary, shadow, isDark, toggleTheme } = useTheme();
 
-    return (
-        <View style={[{ backgroundColor: bg }, shadow.md]}>
-            <Text style={{ color: text }}>Hola mundo</Text>
-            <TouchableOpacity
-                style={{ backgroundColor: primary, padding: 12, borderRadius: 8 }}
-                onPress={toggleTheme}
-            >
-                <Text style={{ color: onPrimary }}>
-                    {isDark ? '☀️ Modo claro' : '🌙 Modo oscuro'}
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
+  return (
+    <View style={[{ backgroundColor: bg }, shadow.md]}>
+      <Text style={{ color: text }}>Hola mundo</Text>
+      <TouchableOpacity
+        style={{ backgroundColor: primary, padding: 12, borderRadius: 8 }}
+        onPress={toggleTheme}
+      >
+        <Text style={{ color: onPrimary }}>
+          {isDark ? '☀️ Modo claro' : '🌙 Modo oscuro'}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 ```
 
@@ -173,11 +173,11 @@ const icon = isDark ? '🌙' : '☀️';
 
 ```tsx
 <ThemeProvider
-    defaultTheme="system"         // 'light' | 'dark' | 'system' — default: 'system'
-    palette={customPalette}       // BrandPalette — default: DEFAULT_PALETTE
-    storageKey="@myapp_theme"     // string — default: '@ds_theme'
+  defaultTheme="system"         // 'light' | 'dark' | 'system' — default: 'system'
+  palette={customPalette}       // BrandPalette — default: DEFAULT_PALETTE
+  storageKey="@myapp_theme"     // string — default: '@ds_theme'
 >
-    {children}
+  {children}
 </ThemeProvider>
 ```
 
@@ -187,16 +187,16 @@ const icon = isDark ? '🌙' : '☀️';
 import { ThemeProvider } from '@ds-yoandry/react';
 
 const myPalette = {
-    primary:    '#FF6B35',
-    secondary:  '#004E89',
-    background: '#F5F5F5',
-    warning:    '#FFD166',
-    danger:     '#EF476F',
-    success:    '#06D6A0',  // Opcional
+  primary:    '#FF6B35',
+  secondary:  '#004E89',
+  background: '#F5F5F5',
+  warning:    '#FFD166',
+  danger:     '#EF476F',
+  success:    '#06D6A0',  // Opcional
 };
 
 <ThemeProvider palette={myPalette}>
-    <App />
+  <App />
 </ThemeProvider>
 ```
 
@@ -209,77 +209,37 @@ import { useTheme } from '@ds-yoandry/react';
 import type { ThemeMode } from '@ds-yoandry/react';
 
 function ThemeSelector() {
-    const { themeMode, setTheme, primary, surface, text, onPrimary, gray } = useTheme();
+  const { themeMode, setTheme, primary, surface, text, onPrimary, gray } = useTheme();
 
-    const options: { label: string; value: ThemeMode }[] = [
-        { label: '☀️ Claro',   value: 'light' },
-        { label: '🌙 Oscuro',  value: 'dark' },
-        { label: '📱 Sistema', value: 'system' },
-    ];
+  const options: { label: string; value: ThemeMode }[] = [
+    { label: '☀️ Claro',   value: 'light' },
+    { label: '🌙 Oscuro',  value: 'dark' },
+    { label: '📱 Sistema', value: 'system' },
+  ];
 
-    return (
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-            {options.map(({ label, value }) => (
-                <TouchableOpacity
-                    key={value}
-                    style={{
-                        backgroundColor: themeMode === value ? primary : surface,
-                        borderColor: themeMode === value ? primary : gray[300],
-                        borderWidth: 1,
-                        padding: 10,
-                        borderRadius: 8,
-                    }}
-                    onPress={() => setTheme(value)}
-                >
-                    <Text style={{ color: themeMode === value ? onPrimary : text }}>
-                        {label}
-                    </Text>
-                </TouchableOpacity>
-            ))}
-        </View>
-    );
+  return (
+    <View style={{ flexDirection: 'row', gap: 8 }}>
+      {options.map(({ label, value }) => (
+        <TouchableOpacity
+          key={value}
+          style={{
+            backgroundColor: themeMode === value ? primary : surface,
+            borderColor: themeMode === value ? primary : gray[300],
+            borderWidth: 1,
+            padding: 10,
+            borderRadius: 8,
+          }}
+          onPress={() => setTheme(value)}
+        >
+          <Text style={{ color: themeMode === value ? onPrimary : text }}>
+            {label}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 }
 ```
-
----
-
-## Monorepo / Metro config
-
-Si usas este paquete en un monorepo con Metro (Expo), agrega en `metro.config.js`:
-
-```js
-const { getDefaultConfig } = require('expo/metro-config');
-const path = require('path');
-
-const projectRoot = __dirname;
-const monorepoRoot = path.resolve(projectRoot, '../..');
-
-const config = getDefaultConfig(projectRoot);
-
-config.watchFolders = [monorepoRoot];
-config.resolver.nodeModulesPaths = [
-    path.resolve(projectRoot, 'node_modules'),
-    path.resolve(monorepoRoot, 'node_modules'),
-];
-
-module.exports = config;
-```
-
----
-
-## Re-exporta `@ds-yoandry/core`
-
-Este paquete re-exporta todo `@ds-yoandry/core`, así que no necesitas instalar ambos:
-
-```typescript
-import {
-    createDesignSystem,
-    lighten,
-    getContrastRatio,
-    DEFAULT_PALETTE,
-} from '@ds-yoandry/react';
-```
-
 
 ---
 
@@ -297,7 +257,7 @@ El paquete incluye 4 paletas listas para usar:
 ```tsx
 // Paleta inicial
 <ThemeProvider defaultPalette="ocean">
-    <App />
+  <App />
 </ThemeProvider>
 ```
 
@@ -322,6 +282,77 @@ import { PaletteSelector } from '@ds-yoandry/react';
 ```tsx
 // Ignora defaultPalette y el selector
 <ThemeProvider palette={{ primary: '#FF6B35', secondary: '...', ... }}>
-    <App />
+  <App />
 </ThemeProvider>
 ```
+
+---
+
+## 🎨 Armonía de colores
+
+Genera paletas armónicas desde un color de marca:
+
+```tsx
+import { suggestHarmonicPalette, ThemeProvider } from '@ds-yoandry/react';
+
+// Generar paleta armónica desde tu color de marca
+const suggestions = suggestHarmonicPalette({
+  locked: { primary: '#FF6B35' },  // tu color
+  strategy: 'triadic',
+});
+
+// Usar la sugerencia como paleta
+<ThemeProvider palette={suggestions[0]}>
+  <App />
+</ThemeProvider>
+```
+
+Ver [@ds-yoandry/core](../core/README.md) para documentación completa de la API de armonía.
+
+---
+
+## Monorepo / Metro config
+
+Si usas este paquete en un monorepo con Metro (Expo), agrega en `metro.config.js`:
+
+```js
+const { getDefaultConfig } = require('expo/metro-config');
+const path = require('path');
+
+const projectRoot = __dirname;
+const monorepoRoot = path.resolve(projectRoot, '../..');
+
+const config = getDefaultConfig(projectRoot);
+
+config.watchFolders = [monorepoRoot];
+config.resolver.nodeModulesPaths = [
+  path.resolve(projectRoot, 'node_modules'),
+  path.resolve(monorepoRoot, 'node_modules'),
+];
+
+module.exports = config;
+```
+
+---
+
+## Re-exporta `@ds-yoandry/core`
+
+Este paquete re-exporta todo `@ds-yoandry/core`, así que no necesitas instalar ambos:
+
+```typescript
+import {
+  createDesignSystem,
+  suggestHarmonicPalette,
+  lighten,
+  getContrastRatio,
+  DEFAULT_PALETTE,
+} from '@ds-yoandry/react';
+```
+
+---
+
+## Ver también
+
+- **[@ds-yoandry/core](../core/README.md)** — Motor completo, armonía, utilidades
+- **[@ds-yoandry/angular](../angular/README.md)** — Signals + Directive para Angular
+- **[ds_yoandry_flutter](../flutter/README.md)** — Versión Flutter

@@ -20,7 +20,7 @@ pnpm add @ds-yoandry/angular
 
 ---
 
-## Setup
+## Inicio rápido
 
 ### 1. Proveer el Design System
 
@@ -31,7 +31,7 @@ import { provideDesignSystem } from '@ds-yoandry/angular';
 import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
-    providers: [provideDesignSystem()]
+  providers: [provideDesignSystem()]
 });
 ```
 
@@ -41,7 +41,7 @@ import { NgModule } from '@angular/core';
 import { provideDesignSystem } from '@ds-yoandry/angular';
 
 @NgModule({
-    providers: [...provideDesignSystem()]
+  providers: [...provideDesignSystem()]
 })
 export class AppModule {}
 ```
@@ -53,29 +53,29 @@ import { Component } from '@angular/core';
 import { injectTheme, ThemeDirective, ThemeColorPipe } from '@ds-yoandry/angular';
 
 @Component({
-    standalone: true,
-    imports: [ThemeDirective, ThemeColorPipe],
-    template: `
-        <div appTheme bg="bg" color="text" class="container">
-            <h1>{{ theme.isDark() ? '🌙' : '☀️' }} Mi App</h1>
-            <p [style.color]="'textSecondary' | themeColor">Descripción</p>
-            <button
-                appTheme bg="primary" color="onPrimary"
-                (click)="theme.toggleTheme()"
-            >
-                Cambiar tema
-            </button>
-        </div>
-    `,
-    styles: [`
-        .container {
-            background: var(--ds-bg);
-            color: var(--ds-text);
-        }
-    `]
+  standalone: true,
+  imports: [ThemeDirective, ThemeColorPipe],
+  template: `
+    <div appTheme bg="bg" color="text" class="container">
+      <h1>{{ theme.isDark() ? '🌙' : '☀️' }} Mi App</h1>
+      <p [style.color]="'textSecondary' | themeColor">Descripción</p>
+      <button
+        appTheme bg="primary" color="onPrimary"
+        (click)="theme.toggleTheme()"
+      >
+        Cambiar tema
+      </button>
+    </div>
+  `,
+  styles: [`
+    .container {
+      background: var(--ds-bg);
+      color: var(--ds-text);
+    }
+  `]
 })
 export class AppComponent {
-    theme = injectTheme();
+  theme = injectTheme();
 }
 ```
 
@@ -90,7 +90,7 @@ El servicio se puede inyectar de dos formas:
 import { injectTheme } from '@ds-yoandry/angular';
 
 class MyComponent {
-    theme = injectTheme();
+  theme = injectTheme();
 }
 
 // Opción 2 — inject() estándar de Angular
@@ -98,7 +98,7 @@ import { inject } from '@angular/core';
 import { ThemeService } from '@ds-yoandry/angular';
 
 class MyComponent {
-    private theme = inject(ThemeService);
+  private theme = inject(ThemeService);
 }
 ```
 
@@ -188,9 +188,9 @@ Obtiene el valor de un color del tema para usarlo en expresiones de binding.
 ```html
 <!-- En ngStyle -->
 <div [ngStyle]="{
-    background: 'surface' | themeColor,
-    color:      'text' | themeColor,
-    borderColor:'border' | themeColor
+  background: 'surface' | themeColor,
+  color:      'text' | themeColor,
+  borderColor:'border' | themeColor
 }">
 
 <!-- En style binding -->
@@ -208,14 +208,14 @@ El `ThemeService` aplica automáticamente variables CSS al `:root` cuando cambia
 
 ```css
 .my-component {
-    background: var(--ds-bg);
-    color: var(--ds-text);
-    border-color: var(--ds-border);
+  background: var(--ds-bg);
+  color: var(--ds-text);
+  border-color: var(--ds-border);
 }
 
 .btn-primary {
-    background: var(--ds-primary);
-    color: var(--ds-primary-light);  /* Usarlo como texto no garantiza contraste */
+  background: var(--ds-primary);
+  color: var(--ds-on-primary);
 }
 ```
 
@@ -224,13 +224,14 @@ El `ThemeService` aplica automáticamente variables CSS al `:root` cuando cambia
 `--ds-text`, `--ds-text-secondary`, `--ds-text-muted`,
 `--ds-primary`, `--ds-primary-light`, `--ds-secondary`,
 `--ds-danger`, `--ds-success`, `--ds-warning`,
+`--ds-on-primary`, `--ds-on-secondary`, `--ds-on-danger`,
 `--ds-border`, `--ds-divider`
 
 También se agrega `ds-dark` o `ds-light` al `body`:
 
 ```css
 body.ds-dark .my-component {
-    /* Estilos adicionales para dark mode */
+  /* Estilos adicionales para dark mode */
 }
 ```
 
@@ -242,18 +243,40 @@ body.ds-dark .my-component {
 import { provideDesignSystem } from '@ds-yoandry/angular';
 
 bootstrapApplication(AppComponent, {
-    providers: [
-        provideDesignSystem({
-            primary:    '#FF6B35',
-            secondary:  '#004E89',
-            background: '#F5F5F5',
-            warning:    '#FFD166',
-            danger:     '#EF476F',
-            success:    '#06D6A0',
-        })
-    ]
+  providers: [
+    provideDesignSystem({
+      primary:    '#FF6B35',
+      secondary:  '#004E89',
+      background: '#F5F5F5',
+      warning:    '#FFD166',
+      danger:     '#EF476F',
+      success:    '#06D6A0',
+    })
+  ]
 });
 ```
+
+---
+
+## 🎨 Armonía de colores
+
+Genera paletas armónicas desde un color de marca:
+
+```typescript
+import { provideDesignSystem, suggestHarmonicPalette } from '@ds-yoandry/angular';
+
+// Generar paleta armónica
+const suggestions = suggestHarmonicPalette({
+  locked: { primary: '#FF6B35' },
+  strategy: 'triadic',
+});
+
+bootstrapApplication(AppComponent, {
+  providers: [provideDesignSystem(suggestions[0])]
+});
+```
+
+Ver [@ds-yoandry/core](../core/README.md) para documentación completa de la API de armonía.
 
 ---
 
@@ -269,9 +292,18 @@ No necesitas instalar `@ds-yoandry/core` por separado:
 
 ```typescript
 import {
-    createDesignSystem,
-    lighten,
-    getContrastRatio,
-    DEFAULT_PALETTE,
+  createDesignSystem,
+  suggestHarmonicPalette,
+  lighten,
+  getContrastRatio,
+  DEFAULT_PALETTE,
 } from '@ds-yoandry/angular';
 ```
+
+---
+
+## Ver también
+
+- **[@ds-yoandry/core](../core/README.md)** — Motor completo, armonía, utilidades
+- **[@ds-yoandry/react](../react/README.md)** — useTheme() para React/RN
+- **[ds_yoandry_flutter](../flutter/README.md)** — Versión Flutter

@@ -5,9 +5,10 @@
 [![npm core](https://img.shields.io/npm/v/@ds-yoandry/core?label=%40ds-yoandry%2Fcore&color=4357AD)](https://www.npmjs.com/package/@ds-yoandry/core)
 [![npm react](https://img.shields.io/npm/v/@ds-yoandry/react?label=%40ds-yoandry%2Freact&color=48A9A6)](https://www.npmjs.com/package/@ds-yoandry/react)
 [![npm angular](https://img.shields.io/npm/v/@ds-yoandry/angular?label=%40ds-yoandry%2Fangular&color=C1666B)](https://www.npmjs.com/package/@ds-yoandry/angular)
+[![CI](https://github.com/YoandryF/ds-yoandry/actions/workflows/ci.yml/badge.svg)](https://github.com/YoandryF/ds-yoandry/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-> Disponible para **React / React Native**, **Angular** y **Flutter / Dart**. El motor es el mismo en todos: JS/TS (`@ds-yoandry/core`) y Dart (`ds_yoandry_core`) producen salidas idénticas, verificadas con un test de paridad.
+> Disponible para **React / React Native**, **Angular** y **Flutter / Dart**. El motor es el mismo en todos: JS/TS (`@ds-yoandry/core`) y Dart (`ds_yoandry_core`) producen salidas idénticas, verificadas con tests de paridad automatizados.
 
 ---
 
@@ -15,36 +16,22 @@
 
 Dale 5 colores de [Coolors.co](https://coolors.co) y obtienes automáticamente:
 
-- Escala de grises uniforme (50–900)
-- Variantes de estado para cada color (light / main / dark / disabled)
-- Colores de texto con contraste **WCAG AA** garantizado
-- Paleta completa para modo claro y oscuro
-- Escalas de opacidad para overlays
-- **🎨 Generador de paletas armónicas** — bloquea tu color de marca y genera el resto
-- Hook `useTheme()` con API plana — sin navegación profunda
+- ✅ Escala de grises uniforme (50–900)
+- ✅ Variantes de estado para cada color (light / main / dark / disabled)
+- ✅ Colores de texto con contraste **WCAG AA** garantizado
+- ✅ Paleta completa para modo claro y oscuro
+- ✅ Escalas de opacidad para overlays
+- ✅ **🎨 Generador de paletas armónicas** — bloquea tu color de marca y genera el resto
+- ✅ Hook `useTheme()` con API plana — sin navegación profunda
 
 ```tsx
-// ❌ Antes
+// ❌ Antes (navegación profunda)
 colors.variants.primary.main
 colors.surface.background
 platform.shadow.md
 
-// ✅ Con useTheme()
+// ✅ Después (API plana)
 const { primary, bg, shadow } = useTheme();
-```
-
-### Armonía de colores (nuevo en v4.3)
-
-```tsx
-import { suggestHarmonicPalette } from '@ds-yoandry/core';
-
-// Tienes tu azul de marca, necesitas el resto
-const suggestions = suggestHarmonicPalette({
-    locked: { primary: '#4357AD' },
-    strategy: 'triadic',  // o 'auto' para la mejor opción
-});
-
-// suggestions[0] = paleta completa armónica con tu color bloqueado
 ```
 
 ---
@@ -53,53 +40,48 @@ const suggestions = suggestHarmonicPalette({
 
 | Paquete | Descripción | Instalación |
 |---------|-------------|-------------|
-| [`@ds-yoandry/core`](./packages/core/README.md) | Motor agnóstico de framework (JS/TS) | `npm i @ds-yoandry/core` |
-| [`@ds-yoandry/react`](./packages/react/README.md) | Hook + Provider para React / React Native | `npm i @ds-yoandry/react` |
-| [`@ds-yoandry/angular`](./packages/angular/README.md) | Service + Signals para Angular 20+ | `npm i @ds-yoandry/angular` |
-| [`ds_yoandry_core`](./packages/dart_core/README.md) | Motor agnóstico en **Dart puro** | `dart pub add ds_yoandry_core` |
-| [`ds_yoandry_flutter`](./packages/flutter/README.md) | Theming + Provider para **Flutter** | `flutter pub add ds_yoandry_flutter` |
+| [`@ds-yoandry/core`](./packages/core/README.md) | Motor agnóstico (JS/TS) | `npm i @ds-yoandry/core` |
+| [`@ds-yoandry/react`](./packages/react/README.md) | Hook + Provider para React / RN | `npm i @ds-yoandry/react` |
+| [`@ds-yoandry/angular`](./packages/angular/README.md) | Service + Signals para Angular | `npm i @ds-yoandry/angular` |
+| [`ds_yoandry_core`](./packages/dart_core/README.md) | Motor agnóstico (Dart puro) | `dart pub add ds_yoandry_core` |
+| [`ds_yoandry_flutter`](./packages/flutter/README.md) | Provider para Flutter | `flutter pub add ds_yoandry_flutter` |
 
 ---
 
 ## Inicio rápido
 
-### React Native (Expo)
+### React / React Native
 
 ```bash
-npm install @ds-yoandry/react @react-native-async-storage/async-storage
+npm install @ds-yoandry/react
 ```
 
 ```tsx
-// app/_layout.tsx
-import { ThemeProvider } from '@ds-yoandry/react';
+// App.tsx
+import { ThemeProvider, useTheme } from '@ds-yoandry/react';
 
-export default function RootLayout() {
-    return (
-        <ThemeProvider defaultTheme="system">
-            <Stack />
-        </ThemeProvider>
-    );
+function App() {
+  return (
+    <ThemeProvider>
+      <MyComponent />
+    </ThemeProvider>
+  );
 }
-```
 
-```tsx
-// Cualquier componente
-import { useTheme } from '@ds-yoandry/react';
+function MyComponent() {
+  const { primary, bg, text, shadow, isDark, toggleTheme } = useTheme();
 
-function MyCard() {
-    const { bg, text, primary, shadow, toggleTheme } = useTheme();
-
-    return (
-        <View style={[{ backgroundColor: bg }, shadow.md]}>
-            <Text style={{ color: text }}>Hola mundo</Text>
-            <TouchableOpacity
-                style={{ backgroundColor: primary }}
-                onPress={toggleTheme}
-            >
-                <Text>Cambiar tema</Text>
-            </TouchableOpacity>
-        </View>
-    );
+  return (
+    <View style={[{ backgroundColor: bg }, shadow.md]}>
+      <Text style={{ color: text }}>Hola mundo</Text>
+      <TouchableOpacity 
+        style={{ backgroundColor: primary }}
+        onPress={toggleTheme}
+      >
+        <Text>{isDark ? '☀️' : '🌙'}</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 ```
 
@@ -114,31 +96,68 @@ npm install @ds-yoandry/angular
 import { provideDesignSystem } from '@ds-yoandry/angular';
 
 bootstrapApplication(AppComponent, {
-    providers: [provideDesignSystem()]
+  providers: [provideDesignSystem()]
 });
-```
 
-```typescript
-// app.component.ts
+// component.ts
 import { injectTheme, ThemeDirective, ThemeColorPipe } from '@ds-yoandry/angular';
 
 @Component({
-    standalone: true,
-    imports: [ThemeDirective, ThemeColorPipe],
-    template: `
-        <div appTheme bg="bg" color="text">
-            <button
-                [style.background]="'primary' | themeColor"
-                [style.color]="'onPrimary' | themeColor"
-                (click)="theme.toggleTheme()"
-            >
-                {{ theme.isDark() ? '☀️ Claro' : '🌙 Oscuro' }}
-            </button>
-        </div>
-    `
+  standalone: true,
+  imports: [ThemeDirective, ThemeColorPipe],
+  template: `
+    <div appTheme bg="bg" color="text">
+      <button 
+        [style.background]="'primary' | themeColor"
+        (click)="theme.toggleTheme()"
+      >
+        {{ theme.isDark() ? '☀️' : '🌙' }}
+      </button>
+    </div>
+  `
 })
 export class AppComponent {
-    theme = injectTheme();
+  theme = injectTheme();
+}
+```
+
+### Flutter
+
+```yaml
+# pubspec.yaml
+dependencies:
+  ds_yoandry_flutter: ^4.4.0
+```
+
+```dart
+import 'package:ds_yoandry_flutter/ds_yoandry_flutter.dart';
+
+void main() {
+  runApp(
+    DsThemeProvider(
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = DsTheme.of(context);
+    
+    return MaterialApp(
+      theme: theme.toMaterialTheme(),
+      home: Scaffold(
+        backgroundColor: theme.bg,
+        body: Text('Hola', style: TextStyle(color: theme.text)),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: theme.primary,
+          onPressed: () => theme.controller.toggleTheme(),
+          child: Icon(theme.isDark ? Icons.light_mode : Icons.dark_mode),
+        ),
+      ),
+    );
+  }
 }
 ```
 
@@ -149,129 +168,228 @@ npm install @ds-yoandry/core
 ```
 
 ```typescript
-import { createDesignSystem } from '@ds-yoandry/core';
+import { createDesignSystem, DEFAULT_PALETTE } from '@ds-yoandry/core';
 
 const system = createDesignSystem({
-    primary: '#4357AD',
-    secondary: '#48A9A6',
-    background: '#E4DFDA',
-    warning: '#D4B483',
-    danger: '#C1666B',
+  primary:    '#4357AD',
+  secondary:  '#48A9A6',
+  background: '#E4DFDA',
+  warning:    '#D4B483',
+  danger:     '#C1666B',
+  // success es opcional — se genera automáticamente
 });
 
-system.colors.variants.primary.main   // '#4357AD'
-system.colors.text.onPrimary          // '#FFFFFF' (WCAG AA)
-system.colors.gray[500]               // Gris medio
-system.colors.dark.background         // Fondo para modo oscuro
+// Colores generados
+system.colors.brand.primary       // '#4357AD'
+system.colors.variants.primary.light  // hover state
+system.colors.variants.primary.dark   // pressed state
+system.colors.text.onPrimary      // '#FFFFFF' (WCAG AA)
+system.colors.gray[500]           // Gris medio
+system.colors.dark.background     // Fondo modo oscuro
 ```
 
 ---
 
-## Paleta por defecto
+## 🎨 Armonía de colores (nuevo en v4.4)
+
+¿Tienes tu color de marca pero no sabes qué colores combinan? El generador de paletas armónicas te sugiere colores que funcionan juntos.
 
 ```typescript
-import { DEFAULT_PALETTE } from '@ds-yoandry/core';
+import { suggestHarmonicPalette } from '@ds-yoandry/core';
 
-// {
-//     primary:    '#4357AD'  — Ocean Twilight
-//     secondary:  '#48A9A6'  — Tropical Teal
-//     background: '#E4DFDA'  — Dust Grey
-//     warning:    '#D4B483'  — Soft Fawn
-//     danger:     '#C1666B'  — Lobster Pink
-//     success:    '#22C55E'  — Emerald (generado automáticamente si no se provee)
+// Bloquea tu color de marca
+const suggestions = suggestHarmonicPalette({
+  locked: { primary: '#4357AD' },
+  strategy: 'triadic',  // analogous, complementary, triadic, split-complementary, tetradic, auto
+  count: 3,
+});
+
+// suggestions[0] = {
+//   primary: '#4357AD',     // ← tu color (bloqueado)
+//   secondary: '#AD4357',   // ← generado armónicamente
+//   background: '#E8E6F0',  // ← generado
+//   warning: '#B38B4D',
+//   danger: '#B34D5A',
+//   success: '#4DAD57',
+//   score: 85,              // puntuación de armonía
+//   accessibilityPass: true // ✓ pasa WCAG AA
 // }
+
+// Usa la sugerencia directamente
+const system = createDesignSystem(suggestions[0]);
+```
+
+### Estrategias de armonía
+
+| Estrategia | Descripción | Uso ideal |
+|------------|-------------|-----------|
+| `analogous` | Colores adyacentes (±30°) | Paletas suaves, apps de bienestar |
+| `complementary` | Opuestos (180°) | Alto contraste, CTAs llamativos |
+| `triadic` | Tres equidistantes (120°) | Balance vibrante, apps creativas |
+| `split-complementary` | 150° + 210° | Complementario menos agresivo |
+| `tetradic` | Cuatro en cuadrado (90°) | Paletas complejas, dashboards |
+| `auto` | Prueba todas | Deja que el algoritmo elija |
+
+### Detectar estrategia de una paleta existente
+
+```typescript
+import { detectHarmonyStrategy } from '@ds-yoandry/core';
+
+const result = detectHarmonyStrategy(['#4357AD', '#AD5743']);
+// { strategy: 'complementary', confidence: 92 }
+```
+
+---
+
+## Colores generados
+
+Desde una paleta de 5-6 colores, se genera automáticamente:
+
+### Variantes de estado
+
+```typescript
+system.colors.variants.primary.light    // +15% luminosidad (hover)
+system.colors.variants.primary.main     // Color original
+system.colors.variants.primary.dark     // -12% luminosidad (pressed)
+system.colors.variants.primary.disabled // 60% mezclado con bg
+```
+
+### Escala de grises (estilo Tailwind)
+
+```typescript
+system.colors.gray[50]   // L=97% — casi blanco
+system.colors.gray[100]  // L=94% — fondos hover
+system.colors.gray[500]  // L=50% — texto disabled
+system.colors.gray[900]  // L=10% — texto principal
+```
+
+### Colores de texto (WCAG AA garantizado)
+
+```typescript
+system.colors.text.primary      // gray[900]
+system.colors.text.secondary    // gray[700]
+system.colors.text.onPrimary    // Blanco o negro según contraste
+system.colors.text.onDanger     // Automático
+```
+
+### Superficies (modo claro y oscuro)
+
+```typescript
+// Modo claro
+system.colors.surface.background  // Tu background
+system.colors.surface.elevated    // #FFFFFF
+
+// Modo oscuro (generado)
+system.colors.dark.background     // gray[900]
+system.colors.dark.surface        // gray[800]
+system.colors.dark.textPrimary    // gray[50]
+```
+
+### Escalas de opacidad
+
+```typescript
+system.colors.alpha.black[50]   // 'rgba(0, 0, 0, 0.5)'
+system.colors.alpha.primary[20] // 'rgba(67, 87, 173, 0.2)'
+```
+
+---
+
+## Utilidades de color
+
+### Conversiones
+
+```typescript
+import { hexToRgb, rgbToHex, rgbToHsl, hslToRgb } from '@ds-yoandry/core';
+
+hexToRgb('#4357AD')      // { r: 67, g: 87, b: 173 }
+rgbToHex(67, 87, 173)    // '#4357ad'
+rgbToHsl(67, 87, 173)    // { h: 228, s: 44, l: 47 }
+```
+
+### Manipulación
+
+```typescript
+import { lighten, darken, mix, complement } from '@ds-yoandry/core';
+
+lighten('#4357AD', 20)         // Más claro
+darken('#4357AD', 15)          // Más oscuro
+mix('#4357AD', '#FFF', 0.3)    // 70% azul, 30% blanco
+complement('#4357AD')          // Color opuesto
+```
+
+### Accesibilidad WCAG 2.1
+
+```typescript
+import { getContrastRatio, meetsContrastAA, ensureContrast } from '@ds-yoandry/core';
+
+getContrastRatio('#4357AD', '#FFFFFF')  // 5.5
+meetsContrastAA('#4357AD', '#FFFFFF')   // true (≥4.5)
+ensureContrast('#888', '#FFF')          // Ajusta para cumplir 4.5:1
 ```
 
 ---
 
 ## Características
 
-- ✅ **Framework agnostic** — el core no tiene dependencias externas
-- ✅ **WCAG AA** — contraste garantizado en todos los colores de texto
-- ✅ **Modo oscuro** — paleta completa generada automáticamente
-- ✅ **TypeScript** — tipos completos incluidos
-- ✅ **Caché** — memoización automática por paleta
-- ✅ **Signals** (Angular) — reactividad nativa sin Zone.js
-- ✅ **AsyncStorage** (React Native) — persistencia de tema
-- ✅ **API plana** — `useTheme()` sin profundidad de objetos
-- ✅ **Tree-shakeable** — solo se incluye lo que se usa
-- ✅ **83 tests** — cobertura del core
-
----
-
-## Estructura del monorepo
-
-```
-ds-yoandry/
-├── packages/
-│   ├── core/          # @ds-yoandry/core   (JS/TS)
-│   ├── react/         # @ds-yoandry/react
-│   ├── angular/       # @ds-yoandry/angular
-│   ├── dart_core/     # ds_yoandry_core    (Dart puro)
-│   └── flutter/       # ds_yoandry_flutter (Flutter)
-├── apps/
-│   └── demo-react/    # App demo con Expo
-├── tools/
-│   └── config/        # tsconfig compartido
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-└── LICENSE
-```
+| Feature | Core | React | Angular | Dart | Flutter |
+|---------|:----:|:-----:|:-------:|:----:|:-------:|
+| Escala de grises | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Variantes de color | ✅ | ✅ | ✅ | ✅ | ✅ |
+| WCAG AA garantizado | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Modo oscuro | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Armonía de colores | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Caché por paleta | ✅ | ✅ | ✅ | ✅ | ✅ |
+| API plana | — | ✅ | ✅ | — | ✅ |
+| Persistencia de tema | — | ✅ | ✅ | — | ✅ |
+| Signals | — | — | ✅ | — | — |
+| Material Theme | — | — | — | — | ✅ |
 
 ---
 
 ## Desarrollo local
 
-### Paquetes JS/TS (core, react, angular)
-
 ```bash
-# Requisitos: Node >= 18, pnpm >= 9
+# Clonar e instalar
+git clone https://github.com/YoandryF/ds-yoandry.git
+cd ds-yoandry
 pnpm install
 
-# Build todos los packages
+# Build
 pnpm build
 
-# Tests del core
+# Tests (125 tests, ~1.2s con SWC)
 pnpm test
 
-# Correr la demo
-cd apps/demo-react && npx expo start
+# Verificar paridad JS ↔ Dart
+pnpm parity
 ```
 
-### Paquetes Dart/Flutter (dart_core, flutter)
+### Estructura del monorepo
 
-```bash
-# Requisitos: Dart SDK >= 3.0 / Flutter >= 3.10
-
-# Motor Dart puro
-cd packages/dart_core
-dart pub get
-dart analyze
-dart test            # incluye el test de PARIDAD contra el core JS
-
-# Binding de Flutter
-cd packages/flutter
-flutter pub get
-flutter analyze
-flutter test
 ```
-
-> **Test de paridad**: `packages/dart_core/test/parity_test.dart` verifica que
-> el core Dart produce salidas idénticas al core JS de producción. Si cambias
-> el core JS, regenera los fixtures:
-> `node packages/dart_core/tool/generate_parity_fixtures.js`
+ds-yoandry/
+├── packages/
+│   ├── core/          # @ds-yoandry/core (JS/TS)
+│   ├── react/         # @ds-yoandry/react
+│   ├── angular/       # @ds-yoandry/angular
+│   ├── dart_core/     # ds_yoandry_core (Dart)
+│   └── flutter/       # ds_yoandry_flutter
+├── apps/
+│   └── demo-react/    # Demo Expo
+├── .github/
+│   └── workflows/     # CI: tests + paridad
+└── turbo.json         # Turborepo config
+```
 
 ---
 
-## Documentación
+## Documentación detallada
 
-- [Guía completa de @ds-yoandry/core](./packages/core/README.md) — motor JS/TS
-- [Guía completa de @ds-yoandry/react](./packages/react/README.md)
-- [Guía completa de @ds-yoandry/angular](./packages/angular/README.md)
-- [Guía completa de ds_yoandry_core](./packages/dart_core/README.md) — motor Dart puro
-- [Guía completa de ds_yoandry_flutter](./packages/flutter/README.md) — theming Flutter
-- [CHANGELOG](./CHANGELOG.md)
-- [CONTRIBUTING](./CONTRIBUTING.md)
+- **[@ds-yoandry/core](./packages/core/README.md)** — Motor completo, todas las funciones
+- **[@ds-yoandry/react](./packages/react/README.md)** — useTheme, ThemeProvider
+- **[@ds-yoandry/angular](./packages/angular/README.md)** — Signals, Directive, Pipe
+- **[ds_yoandry_core](./packages/dart_core/README.md)** — Port Dart del core
+- **[ds_yoandry_flutter](./packages/flutter/README.md)** — DsThemeProvider, Material integration
 
 ---
 
