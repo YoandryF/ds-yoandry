@@ -1,0 +1,14 @@
+# Dart / Pub
+.dart_tool/
+.packages
+build/
+pubspec.lock
+doc/api/
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+
+# Coverage
+coverage/

@@ -9,6 +9,7 @@
 - Node.js >= 18
 - pnpm >= 9 (`npm install -g pnpm`)
 - Git
+- (Para los paquetes Dart) Dart SDK >= 3.0 / Flutter >= 3.10
 
 ---
 
@@ -27,9 +28,11 @@ pnpm build
 
 ```
 packages/
-├── core/      # Motor sin dependencias — TypeScript puro
-├── react/     # Hook + Provider — React / React Native
-└── angular/   # Service + Signals — Angular 16+
+├── core/       # Motor sin dependencias — TypeScript puro
+├── react/      # Hook + Provider — React / React Native
+├── angular/    # Service + Signals — Angular 16+
+├── dart_core/  # Motor sin dependencias — Dart puro
+└── flutter/    # Theming + Provider — Flutter
 apps/
 └── demo-react/  # App Expo de demostración
 ```
@@ -56,6 +59,25 @@ pnpm --filter @ds-yoandry/core dev
 
 # Demo
 cd apps/demo-react && npx expo start
+```
+
+### Paquetes Dart/Flutter
+
+```bash
+# Motor Dart puro
+cd packages/dart_core
+dart pub get
+dart analyze
+dart test                                  # unitarios + paridad
+
+# Regenerar los fixtures de paridad (tras cambiar el core JS)
+node tool/generate_parity_fixtures.js
+
+# Binding de Flutter
+cd packages/flutter
+flutter pub get
+flutter analyze
+flutter test
 ```
 
 ---
@@ -89,15 +111,16 @@ chore: tareas de mantenimiento (deps, build, etc.)
 ## Reglas
 
 ### Código
-- TypeScript estricto en todo el código
-- Mantener los archivos del core **sin dependencias de frameworks** (no React, no Angular)
-- Cada función exportada debe tener JSDoc con al menos un `@example`
+- TypeScript estricto en los paquetes JS; Dart con lints estrictos en los paquetes Dart
+- Mantener los motores (`core` y `dart_core`) **sin dependencias de frameworks** (no React, no Angular, no Flutter)
+- Cada función exportada debe tener JSDoc/DartDoc con al menos un `@example`
 - No romper la API pública sin mayor de versión
+- `dart_core` debe mantener **paridad exacta** con `@ds-yoandry/core`: si cambias uno, actualiza el otro y regenera los fixtures de paridad
 
 ### Tests
-- Cualquier nueva función en `@ds-yoandry/core` debe tener tests
-- Los tests viven en `src/__tests__/`
-- Naming: `<módulo>.test.ts`
+- Cualquier nueva función en `@ds-yoandry/core` debe tener tests en `src/__tests__/` (`<módulo>.test.ts`)
+- Cualquier nueva función en `ds_yoandry_core` debe tener tests en `test/` (`<módulo>_test.dart`)
+- Si tocas el motor JS, corre `node tool/generate_parity_fixtures.js` y verifica que `parity_test.dart` sigue verde
 
 ### Documentación
 - Actualizar el README del package afectado

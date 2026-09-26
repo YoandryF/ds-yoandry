@@ -7,6 +7,43 @@ Versiones siguiendo [Semantic Versioning](https://semver.org/lang/es/).
 
 ---
 
+## [4.4.0] — 2026-09-25
+
+### 🎯 Soporte para Flutter / Dart
+
+Se añaden dos paquetes que llevan el Design System al ecosistema Dart,
+manteniendo **paridad exacta** con el motor JS de producción.
+
+### Agregado
+
+#### `ds_yoandry_core` (Dart puro)
+- Port 1:1 del motor de `@ds-yoandry/core` a Dart, **sin dependencia de Flutter**
+- Usable en Flutter, backends Dart (Shelf / Dart Frog / Serverpod), CLIs, etc.
+- `createDesignSystem(palette, {skipCache})` y `DEFAULT_PALETTE` (`kDefaultPalette`)
+- Todas las utilidades: conversores, manipuladores, accesibilidad, generadores,
+  validadores, caché
+- **Test de paridad** (`test/parity_test.dart`) que compara las salidas contra
+  fixtures generados desde el build de producción del core JS
+  (`tool/generate_parity_fixtures.js`) — cero divergencias
+- 108 tests (unitarios + paridad)
+
+#### `ds_yoandry_flutter`
+- Capa de theming idiomática construida sobre `ds_yoandry_core`
+- `DsThemeProvider` (InheritedNotifier) + `DsTheme.of(context)` — equivalente a
+  `ThemeProvider` / `useTheme()` de React
+- `DsThemeController` (ChangeNotifier) con modo claro/oscuro/sistema
+- `DsThemeData` con API plana que expone `Color` nativos ya resueltos por modo,
+  `List<BoxShadow>` para sombras y `toMaterialTheme()` para integrar con Material
+- Persistencia con `shared_preferences` (equivalente a AsyncStorage)
+- 4 paletas predefinidas + `DsPaletteSelector`
+- Re-exporta todo `ds_yoandry_core`
+
+### Notas
+- Se omitieron `supportsColorMix` / `mixWithNative` del core (son específicos de
+  CSS del navegador y no aplican a Dart/Flutter).
+
+---
+
 ## [4.2.0] — 2026-09-06
 
 ### 🎉 Primera versión pública del monorepo
@@ -86,4 +123,5 @@ Esta versión transforma el sistema de diseño de un módulo local a una librer�
 
 ---
 
+[4.4.0]: https://github.com/YoandryF/ds-yoandry/releases/tag/v4.4.0
 [4.2.0]: https://github.com/YoandryF/ds-yoandry/releases/tag/v4.2.0

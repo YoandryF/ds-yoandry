@@ -1,0 +1,24 @@
+name: ds_yoandry_flutter
+description: Binding de Flutter para el Design System de Yoandry — theming (Provider, modo claro/oscuro, persistencia) sobre ds_yoandry_core. Expone colores como Color nativo.
+version: 4.4.0
+homepage: https://github.com/YoandryF/ds-yoandry
+repository: https://github.com/YoandryF/ds-yoandry
+issue_tracker: https://github.com/YoandryF/ds-yoandry/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ds_yoandry_core:
+    path: ../dart_core
+  shared_preferences: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:

@@ -1,0 +1,13 @@
+name: ds_yoandry_core
+description: Motor del Design System de Yoandry — Dart puro, sin dependencias. Genera colores, escalas, variantes y accesibilidad WCAG AA a partir de una paleta de 5-6 colores.
+version: 4.4.0
+homepage: https://github.com/YoandryF/ds-yoandry
+repository: https://github.com/YoandryF/ds-yoandry
+issue_tracker: https://github.com/YoandryF/ds-yoandry/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.24.0

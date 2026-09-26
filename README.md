@@ -7,6 +7,8 @@
 [![npm angular](https://img.shields.io/npm/v/@ds-yoandry/angular?label=%40ds-yoandry%2Fangular&color=C1666B)](https://www.npmjs.com/package/@ds-yoandry/angular)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
+> Disponible para **React / React Native**, **Angular** y **Flutter / Dart**. El motor es el mismo en todos: JS/TS (`@ds-yoandry/core`) y Dart (`ds_yoandry_core`) producen salidas idénticas, verificadas con un test de paridad.
+
 ---
 
 ## ¿Qué es?
@@ -36,9 +38,11 @@ const { primary, bg, shadow } = useTheme();
 
 | Paquete | Descripción | Instalación |
 |---------|-------------|-------------|
-| [`@ds-yoandry/core`](./packages/core/README.md) | Motor agnóstico de framework | `npm i @ds-yoandry/core` |
+| [`@ds-yoandry/core`](./packages/core/README.md) | Motor agnóstico de framework (JS/TS) | `npm i @ds-yoandry/core` |
 | [`@ds-yoandry/react`](./packages/react/README.md) | Hook + Provider para React / React Native | `npm i @ds-yoandry/react` |
 | [`@ds-yoandry/angular`](./packages/angular/README.md) | Service + Signals para Angular 20+ | `npm i @ds-yoandry/angular` |
+| [`ds_yoandry_core`](./packages/dart_core/README.md) | Motor agnóstico en **Dart puro** | `dart pub add ds_yoandry_core` |
+| [`ds_yoandry_flutter`](./packages/flutter/README.md) | Theming + Provider para **Flutter** | `flutter pub add ds_yoandry_flutter` |
 
 ---
 
@@ -185,9 +189,11 @@ import { DEFAULT_PALETTE } from '@ds-yoandry/core';
 ```
 ds-yoandry/
 ├── packages/
-│   ├── core/          # @ds-yoandry/core
+│   ├── core/          # @ds-yoandry/core   (JS/TS)
 │   ├── react/         # @ds-yoandry/react
-│   └── angular/       # @ds-yoandry/angular
+│   ├── angular/       # @ds-yoandry/angular
+│   ├── dart_core/     # ds_yoandry_core    (Dart puro)
+│   └── flutter/       # ds_yoandry_flutter (Flutter)
 ├── apps/
 │   └── demo-react/    # App demo con Expo
 ├── tools/
@@ -200,6 +206,8 @@ ds-yoandry/
 ---
 
 ## Desarrollo local
+
+### Paquetes JS/TS (core, react, angular)
 
 ```bash
 # Requisitos: Node >= 18, pnpm >= 9
@@ -215,13 +223,38 @@ pnpm test
 cd apps/demo-react && npx expo start
 ```
 
+### Paquetes Dart/Flutter (dart_core, flutter)
+
+```bash
+# Requisitos: Dart SDK >= 3.0 / Flutter >= 3.10
+
+# Motor Dart puro
+cd packages/dart_core
+dart pub get
+dart analyze
+dart test            # incluye el test de PARIDAD contra el core JS
+
+# Binding de Flutter
+cd packages/flutter
+flutter pub get
+flutter analyze
+flutter test
+```
+
+> **Test de paridad**: `packages/dart_core/test/parity_test.dart` verifica que
+> el core Dart produce salidas idénticas al core JS de producción. Si cambias
+> el core JS, regenera los fixtures:
+> `node packages/dart_core/tool/generate_parity_fixtures.js`
+
 ---
 
 ## Documentación
 
-- [Guía completa de @ds-yoandry/core](./packages/core/README.md)
+- [Guía completa de @ds-yoandry/core](./packages/core/README.md) — motor JS/TS
 - [Guía completa de @ds-yoandry/react](./packages/react/README.md)
 - [Guía completa de @ds-yoandry/angular](./packages/angular/README.md)
+- [Guía completa de ds_yoandry_core](./packages/dart_core/README.md) — motor Dart puro
+- [Guía completa de ds_yoandry_flutter](./packages/flutter/README.md) — theming Flutter
 - [CHANGELOG](./CHANGELOG.md)
 - [CONTRIBUTING](./CONTRIBUTING.md)
 
