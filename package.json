@@ -11,7 +11,7 @@
     "clean": "turbo run clean",
     "format": "prettier --write .",
     "prepare": "husky",
-    "parity": "pnpm --filter @ds-yoandry/core build && node packages/dart_core/tool/generate_parity_fixtures.js && cd packages/dart_core && dart test test/parity_test.dart"
+    "parity": "pnpm --filter @yoandryf/core build && node packages/dart_core/tool/generate_parity_fixtures.js && cd packages/dart_core && dart test test/parity_test.dart"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
@@ -32,7 +32,6 @@
       "prettier --write"
     ]
   },
-  "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=9.0.0"
