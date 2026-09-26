@@ -1,9 +1,9 @@
-import { defineConfig } from 'tsup';
+import { defineConfig, type Options } from 'tsup';
 
-export default defineConfig({
+export default defineConfig((options: Options) => ({
     entry: ['src/index.ts'],
     format: ['cjs', 'esm'],
-    dts: true,
+    dts: !options.watch,
     splitting: false,
     sourcemap: true,
     clean: true,
@@ -11,4 +11,4 @@ export default defineConfig({
     target: 'es2020',
     treeshake: true,
     external: ['react', 'react-native', '@react-native-async-storage/async-storage'],
-});
+}));

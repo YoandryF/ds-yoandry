@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-js:
+    name: Test JS/TS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+  test-dart:
+    name: Test Dart + Parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build core
+        run: pnpm --filter @ds-yoandry/core build
+
+      - name: Regenerate parity fixtures
+        run: node packages/dart_core/tool/generate_parity_fixtures.js
+
+      - name: Check fixtures unchanged
+        run: git diff --exit-code packages/dart_core/test/fixtures/parity.json
+
+      - name: Install Dart dependencies
+        run: cd packages/dart_core && dart pub get
+
+      - name: Analyze Dart
+        run: cd packages/dart_core && dart analyze
+
+      - name: Test Dart (including parity)
+        run: cd packages/dart_core && dart test

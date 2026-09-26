@@ -4,15 +4,22 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
+      "inputs": ["src/**", "tsup.config.ts", "tsconfig.json", "package.json"],
       "env": ["NODE_ENV"]
     },
     "test": {
-      "dependsOn": ["build"],
       "outputs": ["coverage/**"],
+      "inputs": ["src/**", "jest.config.js", "package.json"],
       "env": ["NODE_ENV"]
     },
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "inputs": ["src/**", "*.ts", "*.js"]
+    },
+    "parity": {
+      "dependsOn": ["@ds-yoandry/core#build"],
+      "outputs": [],
+      "inputs": ["../core/src/**", "tool/**", "test/**", "lib/**"]
     },
     "dev": {
       "cache": false,

@@ -10,15 +10,27 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky",
+    "parity": "pnpm --filter @ds-yoandry/core build && node packages/dart_core/tool/generate_parity_fixtures.js && cd packages/dart_core && dart test test/parity_test.dart"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
+    "@swc/core": "^1.16.0",
+    "@swc/jest": "^0.2.39",
     "@types/node": "^20.0.0",
     "husky": "^9.0.0",
+    "lint-staged": "^17.5.0",
     "prettier": "^3.0.0",
     "turbo": "^2.0.0",
     "typescript": "^5.5.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
