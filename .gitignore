@@ -50,7 +50,3 @@ yarn.lock
 CLAUDE.md
 AGENTS.md
 .kiro
-
-## pnpm lock — excluido en librería pública
-## (los consumidores instalan sus propias versiones)
-pnpm-lock.yaml
