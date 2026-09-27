@@ -15,11 +15,11 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
-    "@swc/core": "^1.16.0",
+    "@swc/core": "^1.16.2",
     "@swc/jest": "^0.2.39",
     "@types/node": "^20.0.0",
     "husky": "^9.0.0",
-    "lint-staged": "^17.5.0",
+    "lint-staged": "^17.5.1",
     "prettier": "^3.0.0",
     "turbo": "^2.0.0",
     "typescript": "^5.5.0"
